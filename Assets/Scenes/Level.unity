@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: df1a66cd28cb257478427c47e288a27e, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -220,7 +220,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -501,7 +501,7 @@ Transform:
   m_GameObject: {fileID: 517901903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: -0.546, z: 0}
+  m_LocalPosition: {x: 0.505, y: 0.014, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -578,11 +578,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 517901903}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &895814521 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7517549319329480230, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
-  m_PrefabInstance: {fileID: 1597398859}
-  m_PrefabAsset: {fileID: 0}
 --- !u!64 &895814522 stripped
 MeshCollider:
   m_CorrespondingSourceObject: {fileID: 1144836882243552372, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
@@ -867,6 +862,14 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 4123717462048947603, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5668146662411469988, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_MovementType
       value: 0
@@ -883,6 +886,34 @@ PrefabInstance:
       propertyPath: m_Colliders.Array.data[0]
       value: 
       objectReference: {fileID: 895814522}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1957007536}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnRelease
+      objectReference: {fileID: 0}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TargetLocation, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480229, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -901,23 +932,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480229, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.50000006
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480229, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.50000006
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480229, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.50000006
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480229, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.50000006
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480229, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480229, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -929,7 +960,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480230, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_Name
-      value: Interactable Kinematic Cube
+      value: Interactable Velocity Cube
+      objectReference: {fileID: 0}
+    - target: {fileID: 7517549319329480230, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480232, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_Mesh
@@ -979,24 +1014,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6bb5b50a078f95449bdf9cf4c9e7a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Target: {fileID: 895814521}
-  Calls:
+  targetType: Apple
+  positionError: 0.2
+  rotationError: 3
+  OnCompleted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1089800794}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
-        m_MethodName: NextLevel
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  PositionError: 1
-  RotationError: 45
 --- !u!65 &1957007537
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1077,7 +1112,7 @@ Transform:
   m_GameObject: {fileID: 1957007535}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 0.994, z: 0}
+  m_LocalPosition: {x: 3.002, y: 0.125, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children:

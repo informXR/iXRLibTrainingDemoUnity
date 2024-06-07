@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public void NextLevel(double positionError, double rotationError)
+    public void NextLevel(TargetLocation.CompletionData completionData)
     {
-        Debug.Log("Level Completed\nPosition Error: " + positionError + "\nRotation Error:" + rotationError);
+        Debug.Log("Level Completed\nPosition Distance: " + completionData.positionDistance + "\nRotation Distance:" + completionData.rotationDistance);
     }
 }
