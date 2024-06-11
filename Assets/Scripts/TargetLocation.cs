@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 [RequireComponent(typeof(Collider))]
 public class TargetLocation : MonoBehaviour
 {
-    public string targetType;
+    public GrabbableObjectManager.GrabbableObjectType targetType;
     public double positionError = .2;
     // 0.0000004 = 1 degree
     public double rotationError = 3;
@@ -15,8 +15,8 @@ public class TargetLocation : MonoBehaviour
     public struct CompletionData
     {
         public bool validPlacement;
-        public string targetType;
-        public GameObject usedObject;
+        public GrabbableObjectManager.GrabbableObjectType targetType;
+        public GrabbableObjectManager.GrabbableObjectType usedObject;
         public double positionDistance;
         public double rotationDistance;
     }
@@ -30,11 +30,11 @@ public class TargetLocation : MonoBehaviour
     public void OnTriggerStay(Collider collider)
     {
         // Is Valid Collision
-        if (collider.gameObject.layer != 6) return;
+        if (collider.gameObject.GetComponent<GrabbableObject>() == null) return;
         completionData.positionDistance = Vector3.Distance(collider.transform.position, this.transform.position);
         completionData.rotationDistance = CompareQuaternions(collider.transform.rotation, this.transform.rotation);
         completionData.validPlacement = completionData.positionDistance < positionError && completionData.rotationDistance < rotationError;
-        completionData.usedObject = collider.gameObject;
+        completionData.usedObject = collider.gameObject.GetComponent<GrabbableObject>().type;
     }
 
     public void OnTriggerExit(Collider collider)
