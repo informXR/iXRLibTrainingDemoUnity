@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.XR.Interaction.Toolkit;
 public class GrabbableObjectManager : MonoBehaviour
 {
-
-    //I COULDNT FIND A CLEANER SOLUTION THAT WOULDN'T TAKE CRAZY AMOUNTS OF WORK, ITS MESSY AND PAINFUL BUT IT WORKS AND HEY ATLEAST I DONT NEED A PREFAB FOR EVERY TYPE
-
     public GameObject grabbableObjectPrefab;
     [SerializeField]
     public List<GrabbableObjectData> grabbableObjectList;
@@ -46,20 +44,33 @@ public class GrabbableObjectManager : MonoBehaviour
     {
         if (instance != null && instance != this) Destroy(this.gameObject);
         else instance = this;
+
+        CreateGrabbableObject(GrabbableObjectType.Apple);
     }
 
-    public GameObject CreateGrabbableObject(GrabbableObjectType grabbableObjectType, Transform transform)
-    {
-
-        return CreateGrabbableObject(getGrabbableObjectData(grabbableObjectType), transform);
-    }
-
+    public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData) { return CreateGrabbableObject(grabbableObjectData, transform); }
+    public GameObject CreateGrabbableObject(GrabbableObjectType grabbableObjectType) { return CreateGrabbableObject(grabbableObjectType, transform); }
+    public GameObject CreateGrabbableObject(GrabbableObjectType grabbableObjectType, Transform transform) { return CreateGrabbableObject(getGrabbableObjectData(grabbableObjectType), transform); }
     public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData, Transform transform)
     {
+
+
+
+
         GameObject obj = Instantiate(grabbableObjectPrefab, transform);
         obj.GetComponent<MeshFilter>().mesh = grabbableObjectData.mesh;
+        obj.GetComponent<GrabbableObject>().type = grabbableObjectData.type;
+        obj.GetComponent<MeshCollider>().sharedMesh = grabbableObjectData.mesh;
         MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
         meshRenderer.materials = grabbableObjectData.materials.ToArray();
+
+        // Get All Targets
+        TargetLocation[] targetLocations = FindObjectsOfType(typeof(TargetLocation)) as TargetLocation[];
+        foreach (TargetLocation targetLocation in targetLocations)
+        {
+            obj.GetComponent<XRGrabInteractable>().selectExited.AddListener(interactable => targetLocation.OnRelease());
+        }
+
         return obj;
     }
 

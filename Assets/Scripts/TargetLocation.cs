@@ -9,8 +9,8 @@ public class TargetLocation : MonoBehaviour
     public GrabbableObjectManager.GrabbableObjectType targetType;
     public double positionError = .2;
     // 0.0000004 = 1 degree
-    public double rotationError = 3;
-    [SerializeField] public UnityEvent<CompletionData> OnCompleted;
+    public double rotationError = 0.000004; // 20 Degrees
+    public UnityEvent<CompletionData> OnCompleted;
 
     public struct CompletionData
     {
