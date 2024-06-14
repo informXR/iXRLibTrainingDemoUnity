@@ -15,8 +15,10 @@ public class TargetLocation : MonoBehaviour
     public struct CompletionData
     {
         public bool validPlacement;
+        public GameObject usedTarget;
+        public GameObject usedObject;
         public GrabbableObjectManager.GrabbableObjectType targetType;
-        public GrabbableObjectManager.GrabbableObjectType usedObject;
+        public GrabbableObjectManager.GrabbableObjectType usedType;
         public double positionDistance;
         public double rotationDistance;
     }
@@ -34,7 +36,9 @@ public class TargetLocation : MonoBehaviour
         completionData.positionDistance = Vector3.Distance(collider.transform.position, this.transform.position);
         completionData.rotationDistance = CompareQuaternions(collider.transform.rotation, this.transform.rotation);
         completionData.validPlacement = completionData.positionDistance < positionError && completionData.rotationDistance < rotationError;
-        completionData.usedObject = collider.gameObject.GetComponent<GrabbableObject>().type;
+        completionData.usedType = collider.gameObject.GetComponent<GrabbableObject>().type;
+        completionData.usedObject = collider.gameObject;
+        completionData.usedTarget = this.gameObject;
     }
 
     public void OnTriggerExit(Collider collider)

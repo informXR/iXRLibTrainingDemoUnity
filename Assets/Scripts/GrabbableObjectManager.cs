@@ -14,8 +14,9 @@ public class GrabbableObjectManager : MonoBehaviour
     public struct GrabbableObjectData
     {
         public GrabbableObjectType type;
-        public Mesh mesh;
-        public List<Material> materials;
+        public GameObject model;
+    //    public Mesh mesh;
+    //    public List<Material> materials;
     }
 
     public enum GrabbableObjectType
@@ -44,8 +45,6 @@ public class GrabbableObjectManager : MonoBehaviour
     {
         if (instance != null && instance != this) Destroy(this.gameObject);
         else instance = this;
-
-        CreateGrabbableObject(GrabbableObjectType.Apple);
     }
 
     public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData) { return CreateGrabbableObject(grabbableObjectData, transform); }
@@ -53,17 +52,12 @@ public class GrabbableObjectManager : MonoBehaviour
     public GameObject CreateGrabbableObject(GrabbableObjectType grabbableObjectType, Transform transform) { return CreateGrabbableObject(getGrabbableObjectData(grabbableObjectType), transform); }
     public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData, Transform transform)
     {
-
-
-
-
         GameObject obj = Instantiate(grabbableObjectPrefab, transform);
-        obj.GetComponent<MeshFilter>().mesh = grabbableObjectData.mesh;
+        obj.GetComponent<MeshFilter>().mesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
+        obj.GetComponent<MeshCollider>().sharedMesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
         obj.GetComponent<GrabbableObject>().type = grabbableObjectData.type;
-        obj.GetComponent<MeshCollider>().sharedMesh = grabbableObjectData.mesh;
-        MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
-        meshRenderer.materials = grabbableObjectData.materials.ToArray();
 
+        obj.GetComponent<MeshRenderer>().materials = grabbableObjectData.model.GetComponent<MeshRenderer>().sharedMaterials;
         // Get All Targets
         TargetLocation[] targetLocations = FindObjectsOfType(typeof(TargetLocation)) as TargetLocation[];
         foreach (TargetLocation targetLocation in targetLocations)
