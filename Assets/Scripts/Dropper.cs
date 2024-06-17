@@ -19,7 +19,7 @@ public class Dropper : MonoBehaviour
         Debug.Log(targetLocations.Length);
         foreach(TargetLocation targetLocation in targetLocations){
             queue.Add(targetLocation.targetType);
-            Debug.Log(nameof(targetLocation.targetType));
+            Debug.Log(targetLocation.targetType);
         }
 
         SetDelay();
@@ -29,7 +29,6 @@ public class Dropper : MonoBehaviour
     void Update()
     {
         totalTime += Time.deltaTime;
-        Debug.Log(totalTime);
         if(totalTime > lastTime + currentDelay){
             SetDelay();
             lastTime = totalTime;
@@ -43,8 +42,10 @@ public class Dropper : MonoBehaviour
 
 
     public void SpawnRandom(){
-        GrabbableObjectManager.GrabbableObjectType type = queue[(Random.Range(0,queue.Count-1))];
+        List<GrabbableObjectManager.GrabbableObjectType> uniqueValues = GetUniqueValues(queue);
+        GrabbableObjectManager.GrabbableObjectType type = uniqueValues[(Random.Range(0,uniqueValues.Count-1))];
         Remove(type);
+       // Debug.Log(type);
         GrabbableObjectManager.getInstance().CreateGrabbableObject(type, this.transform);
     }
 
@@ -60,5 +61,13 @@ public class Dropper : MonoBehaviour
 
     public void Remove(GrabbableObjectManager.GrabbableObjectType type){
         queue.Remove(type);
+    }
+
+    private List<T> GetUniqueValues<T>(List<T> list){
+        List<T> uniqueValues = new List<T>();
+        foreach(T entry in list)
+            if(!uniqueValues.Contains(entry)) 
+                uniqueValues.Add(entry);
+        return uniqueValues;
     }
 }
