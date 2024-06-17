@@ -8,15 +8,20 @@ public class LevelManager : MonoBehaviour
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
+        Debug.Log("Task Completed");
+
+        if (completionData.usedType != completionData.targetType)
+        {
+            dropper.Replace(completionData.targetType, completionData.usedType);
+            completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
+        }
+
         completionData.usedObject.GetComponent<XRGrabInteractable>().colliders.Clear();
+        completionData.usedTarget.GetComponent<BoxCollider>().isTrigger = false;
+        completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
+
         Destroy(completionData.usedObject);
         Destroy(completionData.usedTarget.GetComponent<Outline>());
         Destroy(completionData.usedTarget.GetComponent<TargetLocation>());
-        completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
-        completionData.usedTarget.GetComponent<BoxCollider>().isTrigger = false;
-
-        if(completionData.usedType != completionData.targetType){
-            dropper.Replace(completionData.targetType, completionData.usedType);
-        }
     }
 }

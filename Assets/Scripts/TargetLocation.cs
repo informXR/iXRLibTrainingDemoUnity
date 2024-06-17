@@ -14,6 +14,7 @@ public class TargetLocation : MonoBehaviour
 
     public struct CompletionData
     {
+        public bool completed; // If this value is false outside of this script there is probably a problem!!!
         public bool validPlacement;
         public GameObject usedTarget;
         public GameObject usedObject;
@@ -45,13 +46,17 @@ public class TargetLocation : MonoBehaviour
     {
         completionData.validPlacement = false;
     }
-
-    // This has to be added to the the OnSelectExited event of the interactable object, validObject, through unity. I can't add it automatically because the event is private somehow :( 
     public void OnRelease()
     {
         Debug.Log(completionData);
         if (!completionData.validPlacement || OnCompleted == null) return;
-        OnCompleted.Invoke(completionData);
+        completionData.completed = true;
+    }
+
+    public void Update()
+    {
+        if (completionData.completed == true) OnCompleted.Invoke(completionData);
+        completionData.completed = false;
     }
 
     private double CompareQuaternions(Quaternion a, Quaternion b)
