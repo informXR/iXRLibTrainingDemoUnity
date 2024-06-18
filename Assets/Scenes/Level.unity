@@ -4571,7 +4571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropper: {fileID: 855846038}
-  successAudioSource: {fileID: 1089800796}
+  successAudioSource: {fileID: 1089800797}
   failureAudioSource: {fileID: 1089800796}
   score: 0
 --- !u!4 &1089800795
