@@ -14,6 +14,7 @@ public class TargetLocation : MonoBehaviour
 
     public struct CompletionData
     {
+        // This is used as a 1 frame delay to avoid errors from some of the xr libraries it's not optimal but...
         public bool completed; // If this value is false outside of this script there is probably a problem!!!
         public bool validPlacement;
         public GameObject usedTarget;
