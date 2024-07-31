@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using iXRLib;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 public class LevelManager : MonoBehaviour
@@ -11,7 +12,8 @@ public class LevelManager : MonoBehaviour
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
-        Debug.Log("Task Completed");
+        iXRSend.LogInfo("Task Completed");
+        Debug.Log("iXRLib - Task Completed");
 
         if (completionData.usedType != completionData.targetType)
         {
