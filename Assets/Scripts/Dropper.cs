@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-//using iXRLib;
+using iXRLib;
 using UnityEngine;
 
 public class Dropper : MonoBehaviour
@@ -20,6 +20,7 @@ public class Dropper : MonoBehaviour
         queue = new List<GrabbableObjectManager.GrabbableObjectType>();
         TargetLocation[] targetLocations = GameObject.FindObjectsOfType<TargetLocation>();
         Debug.Log(targetLocations.Length);
+        iXRSend.LogInfo("Content started");
         //iXRSend.LogInfo(targetLocations.Length.ToString());
         foreach (TargetLocation targetLocation in targetLocations)
         {

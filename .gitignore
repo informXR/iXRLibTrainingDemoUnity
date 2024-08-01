@@ -86,3 +86,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 */xtempburstlibs/*/*.txt
+/TestApp_BackUpThisFolder_ButDontShipItWithYourGame
