@@ -27,7 +27,15 @@ public class LevelManager : MonoBehaviour
         }
 
         completionData.usedObject.GetComponent<XRGrabInteractable>().colliders.Clear();
-        completionData.usedTarget.GetComponent<BoxCollider>().isTrigger = false;
+        //completionData.usedTarget.GetComponent<BoxCollider>().isTrigger = false;
+
+        // Disable the collision box of the usedTarget
+        Collider targetCollider = completionData.usedTarget.GetComponent<Collider>();
+        if (targetCollider != null)
+        {
+            targetCollider.enabled = false;
+        }
+
         completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
 
         Destroy(completionData.usedObject);
