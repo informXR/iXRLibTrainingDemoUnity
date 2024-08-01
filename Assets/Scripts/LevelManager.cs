@@ -20,8 +20,11 @@ public class LevelManager : MonoBehaviour
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             failureAudioSource.Play();
-        }
-        else successAudioSource.Play();
+            iXRSend.AddEvent("Debug", "Task Failed", "event", "env", "");
+        } else {
+            successAudioSource.Play();
+            iXRSend.AddEvent("Debug", "Task Completed", "event", "env", "");
+        } 
 
         completionData.usedObject.GetComponent<XRGrabInteractable>().colliders.Clear();
         completionData.usedTarget.GetComponent<BoxCollider>().isTrigger = false;
