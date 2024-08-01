@@ -50,7 +50,7 @@ public class TargetLocation : MonoBehaviour
     }
     public void OnRelease()
     {
-        iXRSend.LogInfo(completionData.ToString());
+        //iXRSend.LogInfo(completionData.ToString());
         Debug.Log(completionData);
         if (!completionData.validPlacement || OnCompleted == null) return;
         completionData.completed = true;
