@@ -17,7 +17,7 @@ MonoBehaviour:
   authSecret: oLpfwVHFthRMazLTCuqb6P5Epk9hm24FEgWbOgoDWAIzATDN0cdb2KxlUTRBq9i3
   headsetTracking: 1
   trackingUpdatesPerSecond: 1
-  restUrl: http://192.168.2.98:9000/v1/
+  restUrl: https://dev-libapi.informxr.io/v1/
   sendRetriesOnFailure: 3
   sendRetryIntervalSeconds: 3
   sendNextBatchWaitSeconds: 30
