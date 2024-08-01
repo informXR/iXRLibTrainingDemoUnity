@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using iXRLib;
+//using iXRLib;
 using UnityEngine;
 
 public class Dropper : MonoBehaviour

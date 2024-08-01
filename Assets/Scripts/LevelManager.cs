@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using iXRLib;
+//using iXRLib;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 public class LevelManager : MonoBehaviour
@@ -21,10 +21,9 @@ public class LevelManager : MonoBehaviour
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             failureAudioSource.Play();
             //iXRSend.AddEvent("Debug", "Task Failed", "event", "env", "");
-        } else {
-            successAudioSource.Play();
-            //iXRSend.AddEvent("Debug", "Task Completed", "event", "env", "");
         } 
+        else successAudioSource.Play();
+            //iXRSend.AddEvent("Debug", "Task Completed", "event", "env", "");
 
         completionData.usedObject.GetComponent<XRGrabInteractable>().colliders.Clear();
         completionData.usedTarget.GetComponent<BoxCollider>().isTrigger = false;
