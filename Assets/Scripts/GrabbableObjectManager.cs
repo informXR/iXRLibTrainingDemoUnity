@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.XR.Interaction.Toolkit;
+
+//public class GrabbableObject : MonoBehaviour
+//{
+//    public GrabbableObjectManager.GrabbableObjectType type;
+//}
+
 public class GrabbableObjectManager : MonoBehaviour
 {
     public GameObject grabbableObjectPrefab;

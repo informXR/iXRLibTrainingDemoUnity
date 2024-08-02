@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using iXRLib;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.SceneManagement;
+
 public class LevelManager : MonoBehaviour
 {
     public Dropper dropper;
@@ -19,21 +21,24 @@ public class LevelManager : MonoBehaviour
         totalTargets = FindObjectsOfType<TargetLocation>().Length;
         completedTargets = 0;
     }
+    
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
-        iXRSend.LogInfo("Task Attempted");
-        Debug.Log("iXRLib - Task Completed");
+        iXRSend.LogInfo("Placement Attempted");
+        Debug.Log("iXRLib - Placement Attempted");
 
         if (completionData.usedType != completionData.targetType)
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            iXRSend.AddEvent("Debug", "Task Failed", "event", "env", "fruit,bad");
+            iXRSend.AddEvent("Debug", "Placement Failed", "event", "env", $"fruit,{completionData.usedType}");
             failureAudioSource.Play();
+
+            StartCoroutine(RestartAfterFailSound());
+
         }  else {
-            iXRSend.AddEvent("Debug", "Task Completed", "event", "env", "fruit,good");
+            iXRSend.AddEvent("Debug", "Placement Completed", "event", "env", $"fruit,{completionData.usedType}");
             successAudioSource.Play();
-            victoryAudioSource.Play();
             // Increment completed targets and check for victory
             completedTargets++;
             CheckForVictory();
@@ -61,6 +66,10 @@ public class LevelManager : MonoBehaviour
         score *= completionData.targetType == completionData.usedType ? 1 : .25;
     }
 
+    private string GetFruitName(GrabbableObjectManager.GrabbableObjectType fruitType)
+    {
+        return fruitType.ToString().ToLower();
+    }
     private void CheckForVictory()
     {
         if (completedTargets >= totalTargets)
@@ -75,8 +84,39 @@ public class LevelManager : MonoBehaviour
         if (victoryAudioSource != null && !victoryAudioSource.isPlaying)
         {
             victoryAudioSource.Play();
-            iXRSend.AddEvent("Debug", "Level Completed", "event", "env", "victory");
+            iXRSend.AddEvent("Debug", "Level Completed", "event", "env", "victory,true");
             Debug.Log("Level Completed! Victory!");
+
+            StartCoroutine(RestartAfterVictorySound());
         }
+    }
+
+    private IEnumerator RestartAfterVictorySound()
+    {
+        // Wait for the victory sound to finish playing
+        yield return new WaitForSeconds(victoryAudioSource.clip.length);
+        
+        // Call the restart method
+        RestartExperience();
+    }
+
+    private IEnumerator RestartAfterFailSound()
+    {
+        // Wait for the victory sound to finish playing
+        yield return new WaitForSeconds(victoryAudioSource.clip.length);
+        
+        // Call the restart method
+        RestartExperience();
+    }
+
+    private void RestartExperience()
+    {
+        // Reset any necessary game state variables
+        score = 0;
+        completedTargets = 0;
+
+        // Reload the current scene
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
     }
 }
