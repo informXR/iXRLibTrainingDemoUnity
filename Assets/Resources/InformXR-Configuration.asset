@@ -16,7 +16,7 @@ MonoBehaviour:
   orgID: 61246f71-a2ef-4544-a622-83663d594035
   authSecret: oLpfwVHFthRMazLTCuqb6P5Epk9hm24FEgWbOgoDWAIzATDN0cdb2KxlUTRBq9i3
   headsetTracking: 1
-  trackingUpdatesPerSecond: 1
+  trackingUpdatesPerMinute: 4
   restUrl: https://dev-libapi.informxr.io/v1/
   sendRetriesOnFailure: 3
   sendRetryIntervalSeconds: 3
