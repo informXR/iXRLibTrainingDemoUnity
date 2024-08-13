@@ -10,7 +10,7 @@ public class ExitButton : MonoBehaviour
 {
     public void OnSelect(SelectEnterEventArgs args)
     {
-        iXRSend.LogInfo("Exit BLOCK pressed");
+        iXRLog.Info("Exit BLOCK pressed");
         Debug.Log("Exit BLOCK pressed");
         #if UNITY_EDITOR
             EditorApplication.isPlaying = false;

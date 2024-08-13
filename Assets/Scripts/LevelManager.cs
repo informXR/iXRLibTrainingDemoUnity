@@ -20,8 +20,8 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        iXRSend.LogInfo("Content started (LevelManager)");
-        iXRSend.Event("Content started Event (LevelManager)", "started,true");
+        iXRLog.Info("Content started (LevelManager)");
+        iXRLog.Event("Content started Event (LevelManager)", "started=true");
         InitializeGame();
     }
 
@@ -35,21 +35,22 @@ public class LevelManager : MonoBehaviour
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
-        iXRSend.LogInfo("Placement Attempted");
+        iXRLog.Info("Placement Attempted");
         Debug.Log("iXRLib - Placement Attempted");
 
         if (completionData.usedType != completionData.targetType)
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            iXRSend.Event("Placement Failed", $"fruit,{completionData.usedType}");
+            iXRLog.Event("Placement Failed", $"fruit={completionData.usedType}");
+            //iXRLog.Event("Placement Failed", $"fruit={completionData.usedType}", completionData.usedObject.GetComponent);
             failureAudioSource.Play();
 
             StartCoroutine(RestartAfterFailSound());
         }
         else
         {
-            iXRSend.Event("Placement Completed", $"fruit,{completionData.usedType}");
+            iXRLog.Event("Placement Completed", $"fruit={completionData.usedType}");
             successAudioSource.Play();
             // Increment completed targets and check for victory
             completedTargets++;
@@ -67,8 +68,8 @@ public class LevelManager : MonoBehaviour
 
         completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
 
-        //iXRSend.Event("Did something cool", "key,val,key2,val",completionData.usedTarget.GetComponent<TargetLocation>());
-        iXRSend.Event("Did something cool", "key,val,key2,val");
+        //iXRLog.Event("Did something cool", "key=val,key2=val",completionData.usedTarget.GetComponent<TargetLocation>());
+        iXRLog.Event("Did something cool", "key=val,key2=val");
 
         Destroy(completionData.usedObject);
         Destroy(completionData.usedTarget.GetComponent<Outline>());
@@ -85,8 +86,9 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            iXRSend.Event("Level Complete", $"level,1,score,{score},duration,{elapsedTime},victory,true");
-            //iXRSend.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "victory,true");
+            iXRLog.Event("level_complete", $"level=1,score={score},duration={elapsedTime},victory=true");
+            //iXRLog.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "victory=true");
+
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
         }
@@ -195,12 +197,12 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
-            iXRSend.LogInfo("Game components reinitialized successfully");
+            iXRLog.Info("Game components reinitialized successfully");
         }
         catch (Exception e)
         {
             Debug.LogError("Error during ReinitializeComponents: " + e.Message);
-            iXRSend.LogInfo("Error during ReinitializeComponents: " + e.Message);
+            iXRLog.Info("Error during ReinitializeComponents: " + e.Message);
         }
     }
 
@@ -216,13 +218,13 @@ public class LevelManager : MonoBehaviour
         void OnApplicationFocus(bool hasFocus)
         {
             Debug.Log("Focus changed: " + hasFocus);
-            iXRSend.LogInfo("Focus changed: " + hasFocus);
+            iXRLog.Info("Focus changed: " + hasFocus);
         }
 
         void OnApplicationQuit()
         {
             Debug.Log("App is quitting");
-            iXRSend.LogInfo("App is quitting");
+            iXRLog.Info("App is quitting");
             // Perform any cleanup here
         }
     }

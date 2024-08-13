@@ -20,9 +20,9 @@ public class Dropper : MonoBehaviour
         queue = new List<GrabbableObjectManager.GrabbableObjectType>();
         TargetLocation[] targetLocations = GameObject.FindObjectsOfType<TargetLocation>();
         Debug.Log(targetLocations.Length);
-        iXRSend.LogInfo("Content started (Dropper)");
-        iXRSend.Event("Content started Event (Dropper)", "started,true");
-        iXRSend.LogInfo(targetLocations.Length.ToString());
+        iXRLog.Info("Content started (Dropper)");
+        iXRLog.Event("Content started Event (Dropper)", "started,true");
+        iXRLog.Info(targetLocations.Length.ToString());
         foreach (TargetLocation targetLocation in targetLocations)
         {
             queue.Add(targetLocation.targetType);
