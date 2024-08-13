@@ -21,7 +21,7 @@ public class Dropper : MonoBehaviour
         TargetLocation[] targetLocations = GameObject.FindObjectsOfType<TargetLocation>();
         Debug.Log(targetLocations.Length);
         iXRSend.LogInfo("Content started (Dropper)");
-        iXRSend.AddEvent("Debug", "Content started Event (Dropper)", "event", "env", "started,true");
+        iXRSend.Event("Content started Event (Dropper)", "started,true");
         iXRSend.LogInfo(targetLocations.Length.ToString());
         foreach (TargetLocation targetLocation in targetLocations)
         {

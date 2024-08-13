@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90064ff7e10a4fe4b6ccb224c9cf8250, type: 3}
-  m_Name: informXR-Configuration
+  m_Name: informXR
   m_EditorClassIdentifier: 
   appID: 54eb2a16-8bee-4e3c-9b9d-50fb0166610f
   orgID: 61246f71-a2ef-4544-a622-83663d594035
   authSecret: oLpfwVHFthRMazLTCuqb6P5Epk9hm24FEgWbOgoDWAIzATDN0cdb2KxlUTRBq9i3
   headsetTracking: 0
   trackingUpdatesPerMinute: 4
-  restUrl: https://dev-libapi.informxr.io/
+  restUrl: https://dev-libapi.informxr.io/v1/
   sendRetriesOnFailure: 3
   sendRetryIntervalSeconds: 3
   sendNextBatchWaitSeconds: 30

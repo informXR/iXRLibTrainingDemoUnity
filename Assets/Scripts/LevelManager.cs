@@ -16,11 +16,12 @@ public class LevelManager : MonoBehaviour
     public double score;
     private int totalTargets;
     private int completedTargets;
+    private float startTime; // New variable to track start time
 
     void Start()
     {
         iXRSend.LogInfo("Content started (LevelManager)");
-        iXRSend.AddEvent("Debug", "Content started Event (LevelManager)", "event", "env", "started,true");
+        iXRSend.Event("Content started Event (LevelManager)", "started,true");
         InitializeGame();
     }
 
@@ -29,6 +30,7 @@ public class LevelManager : MonoBehaviour
         totalTargets = FindObjectsOfType<TargetLocation>().Length;
         completedTargets = 0;
         score = 0;
+        startTime = Time.time; // Initialize start time when the game begins
     }
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
@@ -40,14 +42,14 @@ public class LevelManager : MonoBehaviour
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            iXRSend.AddEvent("Debug", "Placement Failed", "event", "env", $"fruit,{completionData.usedType}");
+            iXRSend.Event("Placement Failed", $"fruit,{completionData.usedType}");
             failureAudioSource.Play();
 
             StartCoroutine(RestartAfterFailSound());
         }
         else
         {
-            iXRSend.AddEvent("Debug", "Placement Completed", "event", "env", $"fruit,{completionData.usedType}");
+            iXRSend.Event("Placement Completed", $"fruit,{completionData.usedType}");
             successAudioSource.Play();
             // Increment completed targets and check for victory
             completedTargets++;
@@ -65,6 +67,9 @@ public class LevelManager : MonoBehaviour
 
         completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
 
+        //iXRSend.Event("Did something cool", "key,val,key2,val",completionData.usedTarget.GetComponent<TargetLocation>());
+        iXRSend.Event("Did something cool", "key,val,key2,val");
+
         Destroy(completionData.usedObject);
         Destroy(completionData.usedTarget.GetComponent<Outline>());
         Destroy(completionData.usedTarget.GetComponent<TargetLocation>());
@@ -79,6 +84,9 @@ public class LevelManager : MonoBehaviour
     {
         if (completedTargets >= totalTargets)
         {
+            float elapsedTime = Time.time - startTime; // Calculate elapsed time
+            iXRSend.Event("Level Complete", $"level,1,score,{score},duration,{elapsedTime},victory,true");
+            //iXRSend.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "victory,true");
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
         }
@@ -89,7 +97,6 @@ public class LevelManager : MonoBehaviour
         if (victoryAudioSource != null && !victoryAudioSource.isPlaying)
         {
             victoryAudioSource.Play();
-            iXRSend.AddEvent("Debug", "Level Completed", "event", "env", "victory,true");
             Debug.Log("Level Completed! Victory!");
 
             StartCoroutine(RestartAfterVictorySound());
