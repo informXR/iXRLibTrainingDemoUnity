@@ -1,5 +1,19 @@
 {
   "dependencies": {
+    "com.informxr.unity-sdk": {
+      "version": "https://github.com/informXR/iXRLibUnitySDK.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.xr.core-utils": "2.2.3",
+        "com.unity.xr.interaction.toolkit": "2.5.3",
+        "com.unity.xr.management": "4.4.1",
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.editorcoroutines": "1.0.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "8b629240694ee69ded672318ceab2b6a8382116d"
+    },
     "com.unity.burst": {
       "version": "1.8.15",
       "depth": 1,
@@ -105,6 +119,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.performance.profile-analyzer": {
       "version": "1.2.2",
       "depth": 1,
@@ -188,7 +209,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
