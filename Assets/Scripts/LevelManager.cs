@@ -21,7 +21,9 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         iXRLog.Info("Content started (LevelManager)");
-        iXRLog.Event("Content started Event (LevelManager)", "started=true");
+        //iXRLog.EventLevelStart("1", "scriptName=LevelManager");
+        iXRLog.Event("level_start", "level=1,scriptName=LevelManager");
+
         InitializeGame();
     }
 
@@ -42,15 +44,15 @@ public class LevelManager : MonoBehaviour
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            iXRLog.Event("Placement Failed", $"fruit={completionData.usedType}");
-            //iXRLog.Event("Placement Failed", $"fruit={completionData.usedType}", completionData.usedObject.GetComponent);
+            iXRLog.Event("task_failed", $"fruit={completionData.usedType}");
+            //iXRLog.Event("Placement Failed", $"fruit={completionData.usedType}", obj);
             failureAudioSource.Play();
 
             StartCoroutine(RestartAfterFailSound());
         }
         else
         {
-            iXRLog.Event("Placement Completed", $"fruit={completionData.usedType}");
+            iXRLog.Event("task_completed", $"fruit={completionData.usedType}");
             successAudioSource.Play();
             // Increment completed targets and check for victory
             completedTargets++;
@@ -69,7 +71,7 @@ public class LevelManager : MonoBehaviour
         completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
 
         //iXRLog.Event("Did something cool", "key=val,key2=val",completionData.usedTarget.GetComponent<TargetLocation>());
-        iXRLog.Event("Did something cool", "key=val,key2=val");
+        //iXRLog.Event("Did something cool", "key=val,key2=val");
 
         Destroy(completionData.usedObject);
         Destroy(completionData.usedTarget.GetComponent<Outline>());
@@ -86,8 +88,8 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            iXRLog.Event("level_complete", $"level=1,score={score},duration={elapsedTime},victory=true");
             //iXRLog.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "victory=true");
+            iXRLog.Event("level_complete", $"level=1,score={score},duration={elapsedTime},victory=true");
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
