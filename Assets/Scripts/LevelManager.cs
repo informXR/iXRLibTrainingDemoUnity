@@ -44,8 +44,8 @@ public class LevelManager : MonoBehaviour
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            iXRLog.Event("task_failed", $"fruit={completionData.usedType}");
-            //iXRLog.Event("Placement Failed", $"fruit={completionData.usedType}", obj);
+            //iXRLog.Event("task_failed", $"fruit={completionData.usedType}");
+            iXRLog.Event("Placement Failed", $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}", completionData.usedObject);
             failureAudioSource.Play();
 
             StartCoroutine(RestartAfterFailSound());
