@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: informXR
   m_EditorClassIdentifier: iXR.Runtime::Configuration
-  appID: 
-  orgID: 
-  authSecret: 
-  headsetTracking: 0
+  appID: 35815899-6787-4b2a-b3a7-e614ef79315b
+  orgID: aaa
+  authSecret: aaa
+  headsetTracking: 1
   trackingUpdatesPerMinute: 4
   restUrl: https://libapi.informxr.io/v1/
   sendRetriesOnFailure: 3
