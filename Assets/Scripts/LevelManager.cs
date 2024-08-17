@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using iXRLib;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.SceneManagement;
@@ -20,9 +19,9 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        iXRLog.Info("Content started (LevelManager)");
-        //iXRLog.EventLevelStart("1", "scriptName=LevelManager");
-        iXRLog.Event("level_start", "level=1,scriptName=LevelManager");
+        iXR.LogInfo("Content started (LevelManager)");
+        //iXR.EventLevelStart("1", "scriptName=LevelManager");
+        iXR.Event("level_start", "level=1,scriptName=LevelManager");
 
         InitializeGame();
     }
@@ -37,22 +36,22 @@ public class LevelManager : MonoBehaviour
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
-        iXRLog.Info("Placement Attempted");
+        iXR.LogInfo("Placement Attempted");
         Debug.Log("iXRLib - Placement Attempted");
 
         if (completionData.usedType != completionData.targetType)
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            //iXRLog.Event("task_failed", $"fruit={completionData.usedType}");
-            iXRLog.Event("Placement Failed", $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}", completionData.usedObject);
+            //iXR.Event("task_failed", $"fruit={completionData.usedType}");
+            iXR.Event("Placement Failed", $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}", completionData.usedObject);
             failureAudioSource.Play();
 
             StartCoroutine(RestartAfterFailSound());
         }
         else
         {
-            iXRLog.Event("task_completed", $"fruit={completionData.usedType}");
+            iXR.Event("task_completed", $"fruit={completionData.usedType}");
             successAudioSource.Play();
             // Increment completed targets and check for victory
             completedTargets++;
@@ -70,8 +69,8 @@ public class LevelManager : MonoBehaviour
 
         completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
 
-        //iXRLog.Event("Did something cool", "key=val,key2=val",completionData.usedTarget.GetComponent<TargetLocation>());
-        //iXRLog.Event("Did something cool", "key=val,key2=val");
+        //iXR.Event("Did something cool", "key=val,key2=val",completionData.usedTarget.GetComponent<TargetLocation>());
+        //iXR.Event("Did something cool", "key=val,key2=val");
 
         Destroy(completionData.usedObject);
         Destroy(completionData.usedTarget.GetComponent<Outline>());
@@ -88,8 +87,8 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            //iXRLog.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "victory=true");
-            iXRLog.Event("level_complete", $"level=1,score={score},duration={elapsedTime},victory=true");
+            //iXR.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "victory=true");
+            iXR.Event("level_complete", $"level=1,score={score},duration={elapsedTime},victory=true");
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
@@ -199,12 +198,12 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
-            iXRLog.Info("Game components reinitialized successfully");
+            iXR.LogInfo("Game components reinitialized successfully");
         }
         catch (Exception e)
         {
             Debug.LogError("Error during ReinitializeComponents: " + e.Message);
-            iXRLog.Info("Error during ReinitializeComponents: " + e.Message);
+            iXR.LogInfo("Error during ReinitializeComponents: " + e.Message);
         }
     }
 
@@ -220,13 +219,13 @@ public class LevelManager : MonoBehaviour
         void OnApplicationFocus(bool hasFocus)
         {
             Debug.Log("Focus changed: " + hasFocus);
-            iXRLog.Info("Focus changed: " + hasFocus);
+            iXR.LogInfo("Focus changed: " + hasFocus);
         }
 
         void OnApplicationQuit()
         {
             Debug.Log("App is quitting");
-            iXRLog.Info("App is quitting");
+            iXR.LogInfo("App is quitting");
             // Perform any cleanup here
         }
     }
