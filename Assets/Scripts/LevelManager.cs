@@ -43,19 +43,13 @@ public class LevelManager : MonoBehaviour
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            //iXR.Event("task_failed", $"fruit={completionData.usedType}");
             iXR.Event("Placement Failed", $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}", completionData.usedObject);
-            failureAudioSource.Play();
-
-            StartCoroutine(RestartAfterFailSound());
+            StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
             iXR.Event("task_completed", $"fruit={completionData.usedType}");
-            successAudioSource.Play();
-            // Increment completed targets and check for victory
-            completedTargets++;
-            CheckForVictory();
+            StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
 
         completionData.usedObject.GetComponent<XRGrabInteractable>().colliders.Clear();
@@ -69,9 +63,6 @@ public class LevelManager : MonoBehaviour
 
         completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
 
-        //iXR.Event("Did something cool", "key=val,key2=val",completionData.usedTarget.GetComponent<TargetLocation>());
-        //iXR.Event("Did something cool", "key=val,key2=val");
-
         Destroy(completionData.usedObject);
         Destroy(completionData.usedTarget.GetComponent<Outline>());
         Destroy(completionData.usedTarget.GetComponent<TargetLocation>());
@@ -82,13 +73,23 @@ public class LevelManager : MonoBehaviour
         score *= completionData.targetType == completionData.usedType ? 1 : .25;
     }
 
+    private IEnumerator PlaySuccessSoundAndCheckVictory()
+    {
+        successAudioSource.Play();
+        yield return new WaitForSeconds(successAudioSource.clip.length);
+        
+        // Increment completed targets and check for victory
+        completedTargets++;
+        CheckForVictory();
+    }
+
     private void CheckForVictory()
     {
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            //iXR.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "victory=true");
-            iXR.Event("level_complete", $"level=1,score={score},duration={elapsedTime},victory=true");
+            //iXR.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "success=true");
+            iXR.Event("level_complete", $"level=1,score={score},duration={elapsedTime},success=true");
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
@@ -113,10 +114,13 @@ public class LevelManager : MonoBehaviour
         RestartExperience();
     }
 
-    private IEnumerator RestartAfterFailSound()
+    private IEnumerator PlayFailSoundThenRestart()
     {
-        // Wait for the victory sound to finish playing
-        yield return new WaitForSeconds(failureAudioSource.clip.length);
+        if (failureAudioSource != null && !failureAudioSource.isPlaying)
+        {
+            failureAudioSource.Play();
+            yield return new WaitForSeconds(failureAudioSource.clip.length);
+        }
         RestartExperience();
     }
 
