@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 90064ff7e10a4fe4b6ccb224c9cf8250, type: 3}
   m_Name: informXR
-  m_EditorClassIdentifier: iXR.Runtime::Configuration
+  m_EditorClassIdentifier: 
   appID: 9c38d3dd-4b81-440a-a124-60bccc5bd900
-  orgID: aaa
-  authSecret: aaa
-  headsetTracking: 1
+  orgID: aa
+  authSecret: aa
+  headsetTracking: 0
   trackingUpdatesPerMinute: 4
   restUrl: https://dev-libapi.informxr.io/v1/
   sendRetriesOnFailure: 3
