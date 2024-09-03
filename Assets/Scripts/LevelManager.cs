@@ -20,9 +20,8 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         iXR.LogInfo("Content started (LevelManager)");
-        //iXR.EventLevelStart("1", "scriptName=LevelManager");
-        iXR.Event("level_start", "level=1,scriptName=LevelManager");
-
+        iXR.EventAssessmentStart("1", "scriptName=LevelManager");
+        //iXR.Event("assessment_start", "assessment_name=1,scriptName=LevelManager");
         InitializeGame();
     }
 
@@ -43,12 +42,14 @@ public class LevelManager : MonoBehaviour
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            iXR.Event("Placement Failed", $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}", completionData.usedObject);
+            iXR.EventInteractionComplete("place_item", "0", $"{Time.time - startTime}",$"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
+            //iXR.Event("interaction_completed", $"interaction_name=place_item,placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}",completionData.usedObject);
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
-            iXR.Event("task_completed", $"fruit={completionData.usedType}");
+            iXR.EventInteractionComplete("place_item", "100", $"{Time.time - startTime}", $"placed_fruit={completionData.usedType}");
+            //iXR.Event("interaction_completed", $"interaction_name=place_item,placed_fruit={completionData.usedType},duration={Time.time - startTime}");
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
 
@@ -88,8 +89,8 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            //iXR.EventLevelComplete("1", $"{score}", $"{elapsedTime}", "success=true");
-            iXR.Event("level_complete", $"level=1,score={score},duration={elapsedTime},success=true");
+            iXR.EventAssessmentComplete("1", $"{score}", $"{elapsedTime}", "success=true");
+            //iXR.Event("level_complete", $"level=1,score={score},duration={elapsedTime},success=true");
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
