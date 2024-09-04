@@ -62,6 +62,7 @@ public class GrabbableObjectManager : MonoBehaviour
         obj.GetComponent<MeshFilter>().mesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
         obj.GetComponent<MeshCollider>().sharedMesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
         obj.GetComponent<GrabbableObject>().type = grabbableObjectData.type;
+        obj.GetComponent<GrabbableObject>().id = System.Guid.NewGuid().ToString();
 
         obj.GetComponent<MeshRenderer>().materials = grabbableObjectData.model.GetComponent<MeshRenderer>().sharedMaterials;
         // Get All Targets

@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         iXR.LogInfo("Content started (LevelManager)");
-        iXR.EventAssessmentStart("1", "scriptName=LevelManager");
+        iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
         //iXR.Event("assessment_start", "assessment_name=1,scriptName=LevelManager");
         InitializeGame();
     }
@@ -40,15 +40,22 @@ public class LevelManager : MonoBehaviour
 
         if (completionData.usedType != completionData.targetType)
         {
-            dropper.Replace(completionData.targetType, completionData.usedType);
+            // Remove this line:
+            // dropper.Replace(completionData.targetType, completionData.usedType);
+            
+            // Instead, we might want to add the correct type back to the dropper:
+            dropper.Add(completionData.targetType);
+
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            iXR.EventInteractionComplete("place_item", "0", $"{Time.time - startTime}",$"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
+            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().id;
+            iXR.EventInteractionComplete(objectId, "place_item", "0", $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
             //iXR.Event("interaction_completed", $"interaction_name=place_item,placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}",completionData.usedObject);
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
-            iXR.EventInteractionComplete("place_item", "100", $"{Time.time - startTime}", $"placed_fruit={completionData.usedType}");
+            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().id;
+            iXR.EventInteractionComplete(objectId, "place_item", "100", $"placed_fruit={completionData.usedType.ToString()}");
             //iXR.Event("interaction_completed", $"interaction_name=place_item,placed_fruit={completionData.usedType},duration={Time.time - startTime}");
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
@@ -89,8 +96,8 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            iXR.EventAssessmentComplete("1", $"{score}", $"{elapsedTime}", "success=true");
-            //iXR.Event("level_complete", $"level=1,score={score},duration={elapsedTime},success=true");
+            iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
+            //iXR.Event("assessment_complete", $"level=stocking_training_unit_1,score={score},duration={elapsedTime},success=true");
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.

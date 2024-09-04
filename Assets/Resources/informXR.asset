@@ -15,7 +15,7 @@ MonoBehaviour:
   appID: 9c38d3dd-4b81-440a-a124-60bccc5bd900
   orgID: aa
   authSecret: aa
-  headsetTracking: 0
+  headsetTracking: 1
   trackingUpdatesPerMinute: 4
   restUrl: https://dev-libapi.informxr.io/v1/
   sendRetriesOnFailure: 3
