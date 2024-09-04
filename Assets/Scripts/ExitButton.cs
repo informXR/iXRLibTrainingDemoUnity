@@ -8,7 +8,19 @@ using UnityEditor;
 
 public class ExitButton : MonoBehaviour
 {
-    public void OnSelect(SelectEnterEventArgs args)
+    private XRSimpleInteractable interactable;
+
+    private void Awake()
+    {
+        interactable = GetComponent<XRSimpleInteractable>();
+        if (interactable == null)
+        {
+            interactable = gameObject.AddComponent<XRSimpleInteractable>();
+        }
+        interactable.selectEntered.AddListener(OnSelect);
+    }
+
+    private void OnSelect(SelectEnterEventArgs args)
     {
         iXR.LogInfo("Exit button pressed");
         Debug.Log("Exit button pressed");
@@ -18,14 +30,20 @@ public class ExitButton : MonoBehaviour
     private IEnumerator ExitGame()
     {
         // Perform any cleanup or saving operations here
-        // For example: SaveGameState();
+        // SaveGameState();
 
-        yield return new WaitForSeconds(0.5f); // Short delay for any final operations
+        yield return new WaitForSeconds(0.5f); // Short delay for cleanup
 
-        #if UNITY_EDITOR
-            EditorApplication.ExitPlaymode();
+        #if UNITY_ANDROID && !UNITY_EDITOR
+            //Application.Quit();
+            // Return to launcher instead of quitting
+            AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+            activity.Call("moveTaskToBack", true);
+        #elif UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
         #else
             Application.Quit();
         #endif
     }
+
 }
