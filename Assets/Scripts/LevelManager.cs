@@ -41,10 +41,7 @@ public class LevelManager : MonoBehaviour
         if (completionData.usedType != completionData.targetType)
         {
             // Remove this line:
-            // dropper.Replace(completionData.targetType, completionData.usedType);
-            
-            // Instead, we might want to add the correct type back to the dropper:
-            dropper.Add(completionData.targetType);
+            dropper.Replace(completionData.targetType, completionData.usedType);
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().id;
