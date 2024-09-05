@@ -19,7 +19,8 @@ public class Dropper : MonoBehaviour
         queue = new List<GrabbableObjectManager.GrabbableObjectType>();
         TargetLocation[] targetLocations = GameObject.FindObjectsOfType<TargetLocation>();
         Debug.Log(targetLocations.Length);
-        iXR.Event("level_start", "level=1,scriptName=Dropper");
+        iXR.EventLevelStart("1", "scriptName=Dropper");
+        //iXR.Event("level_start", "level=1,scriptName=Dropper");
         iXR.LogInfo(targetLocations.Length.ToString());
         foreach (TargetLocation targetLocation in targetLocations)
         {
