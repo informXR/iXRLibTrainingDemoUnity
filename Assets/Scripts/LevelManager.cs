@@ -40,20 +40,17 @@ public class LevelManager : MonoBehaviour
 
         if (completionData.usedType != completionData.targetType)
         {
-            // Remove this line:
             dropper.Replace(completionData.targetType, completionData.usedType);
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().id;
+            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
             iXR.EventInteractionComplete(objectId, "place_item", "0", $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
-            //iXR.Event("interaction_completed", $"interaction_name=place_item,placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}",completionData.usedObject);
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
-            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().id;
+            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
             iXR.EventInteractionComplete(objectId, "place_item", "100", $"placed_fruit={completionData.usedType.ToString()}");
-            //iXR.Event("interaction_completed", $"interaction_name=place_item,placed_fruit={completionData.usedType},duration={Time.time - startTime}");
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
 
@@ -131,12 +128,17 @@ public class LevelManager : MonoBehaviour
 
     private void RestartExperience()
     {
-        InitializeGame();
-        ReinitializeComponents();
+        InitializeAndReinitializeGame();
     }
 
-    private void ReinitializeComponents()
+    private void InitializeAndReinitializeGame()
     {
+        // Initialize game state
+        totalTargets = FindObjectsOfType<TargetLocation>().Length;
+        completedTargets = 0;
+        score = 0;
+        startTime = Time.time;
+
         try
         {
             // Reset the Dropper
@@ -211,31 +213,8 @@ public class LevelManager : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError("Error during ReinitializeComponents: " + e.Message);
-            iXR.LogInfo("Error during ReinitializeComponents: " + e.Message);
-        }
-    }
-
-    public class LifecycleManager : MonoBehaviour
-    {
-        private LevelManager levelManager;
-
-        void Start()
-        {
-            levelManager = FindObjectOfType<LevelManager>();
-        }
-
-        void OnApplicationFocus(bool hasFocus)
-        {
-            Debug.Log("Focus changed: " + hasFocus);
-            iXR.LogInfo("Focus changed: " + hasFocus);
-        }
-
-        void OnApplicationQuit()
-        {
-            Debug.Log("App is quitting");
-            iXR.LogInfo("App is quitting");
-            // Perform any cleanup here
+            Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
+            iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
         }
     }
 }

@@ -35,10 +35,16 @@ public class ExitButton : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Short delay for cleanup
 
         #if UNITY_ANDROID && !UNITY_EDITOR
-            //Application.Quit();
-            // Return to launcher instead of quitting
-            AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
-            activity.Call("moveTaskToBack", true);
+            try
+            {
+                AndroidJavaObject activity = new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+                activity.Call("moveTaskToBack", true);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("Failed to return to launcher: " + e.Message);
+                Application.Quit();
+            }
         #elif UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #else

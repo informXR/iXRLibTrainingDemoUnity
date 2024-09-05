@@ -6,12 +6,13 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class GrabbableObject : MonoBehaviour
 {
     public GrabbableObjectManager.GrabbableObjectType type;
-    public string id;
+    public string Id { get; private set; }
 
     private XRGrabInteractable grabInteractable;
 
     private void Awake()
     {
+        Id = System.Guid.NewGuid().ToString();
         grabInteractable = GetComponent<XRGrabInteractable>();
         if (grabInteractable != null)
         {
@@ -21,7 +22,7 @@ public class GrabbableObject : MonoBehaviour
 
     private void OnGrab(SelectEnterEventArgs args)
     {
-        iXR.EventInteractionStart(id, "place_item");
+        iXR.EventInteractionStart(Id, "place_item");
     }
 
     private void OnDestroy()
@@ -29,6 +30,22 @@ public class GrabbableObject : MonoBehaviour
         if (grabInteractable != null)
         {
             grabInteractable.selectEntered.RemoveListener(OnGrab);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (grabInteractable != null)
+        {
+            grabInteractable.selectEntered.RemoveListener(OnGrab);
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (grabInteractable != null)
+        {
+            grabInteractable.selectEntered.AddListener(OnGrab);
         }
     }
 }

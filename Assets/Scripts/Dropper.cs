@@ -54,7 +54,8 @@ public class Dropper : MonoBehaviour
         if (queue.Count == 0) return;
 
         List<GrabbableObjectManager.GrabbableObjectType> uniqueValues = GetUniqueValues(queue);
-        GrabbableObjectManager.GrabbableObjectType type = uniqueValues[(Random.Range(0, uniqueValues.Count - 1))];
+        int index = Random.Range(0, uniqueValues.Count);
+        GrabbableObjectManager.GrabbableObjectType type = uniqueValues[index];
         Remove(type);
         // Debug.Log(type);
         GameObject obj = GrabbableObjectManager.getInstance().CreateGrabbableObject(type, this.transform);

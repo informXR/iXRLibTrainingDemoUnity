@@ -26,6 +26,7 @@ public class TargetLocation : MonoBehaviour
     }
 
     private CompletionData completionData;
+    private bool isCompleted = false;
 
     public void Start()
     {
@@ -49,16 +50,20 @@ public class TargetLocation : MonoBehaviour
     }
     public void OnRelease()
     {
-        iXR.LogInfo(completionData.ToString());
-        Debug.Log(completionData);
+        string jsonData = JsonUtility.ToJson(completionData);
+        iXR.LogInfo(jsonData);
+        Debug.Log(jsonData);
         if (!completionData.validPlacement || OnCompleted == null) return;
-        completionData.completed = true;
+        isCompleted = true;
     }
 
     public void Update()
     {
-        if (completionData.completed == true) OnCompleted.Invoke(completionData);
-        completionData.completed = false;
+        if (isCompleted)
+        {
+            OnCompleted.Invoke(completionData);
+            isCompleted = false;
+        }
     }
 
     private double CompareQuaternions(Quaternion a, Quaternion b)

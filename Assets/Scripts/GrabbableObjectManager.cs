@@ -49,8 +49,15 @@ public class GrabbableObjectManager : MonoBehaviour
 
     public void Start()
     {
-        if (instance != null && instance != this) Destroy(this.gameObject);
-        else instance = this;
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+            // Add any additional initialization here
+        }
     }
 
     public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData) { return CreateGrabbableObject(grabbableObjectData, transform); }
@@ -62,8 +69,6 @@ public class GrabbableObjectManager : MonoBehaviour
         obj.GetComponent<MeshFilter>().mesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
         obj.GetComponent<MeshCollider>().sharedMesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
         obj.GetComponent<GrabbableObject>().type = grabbableObjectData.type;
-        obj.GetComponent<GrabbableObject>().id = System.Guid.NewGuid().ToString();
-
         obj.GetComponent<MeshRenderer>().materials = grabbableObjectData.model.GetComponent<MeshRenderer>().sharedMaterials;
         // Get All Targets
         TargetLocation[] targetLocations = FindObjectsOfType(typeof(TargetLocation)) as TargetLocation[];
