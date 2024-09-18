@@ -7,9 +7,9 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class TargetLocation : MonoBehaviour
 {
     public GrabbableObjectManager.GrabbableObjectType targetType;
-    public double positionThreshold = .2;
+    public double positionError = .2;
     // 0.0000004 = 1 degree
-    public double rotationThreshold = 0.000004;
+    public double rotationError = 0.000004; // 20 Degrees
     public UnityEvent<CompletionData> OnCompleted;
 
     public struct CompletionData
@@ -23,8 +23,6 @@ public class TargetLocation : MonoBehaviour
         public GrabbableObjectManager.GrabbableObjectType usedType;
         public double positionDistance;
         public double rotationDistance;
-        public double positionThreshold;
-        public double rotationThreshold;
     }
 
     private CompletionData completionData;
@@ -40,9 +38,7 @@ public class TargetLocation : MonoBehaviour
         if (collider.gameObject.GetComponent<GrabbableObject>() == null) return;
         completionData.positionDistance = Vector3.Distance(collider.transform.position, this.transform.position);
         completionData.rotationDistance = CompareQuaternions(collider.transform.rotation, this.transform.rotation);
-        completionData.positionThreshold = this.positionThreshold;
-        completionData.rotationThreshold = this.rotationThreshold;
-        completionData.validPlacement = completionData.positionDistance < positionThreshold && completionData.rotationDistance < rotationThreshold;
+        completionData.validPlacement = completionData.positionDistance < positionError && completionData.rotationDistance < rotationError;
         completionData.usedType = collider.gameObject.GetComponent<GrabbableObject>().type;
         completionData.usedObject = collider.gameObject;
         completionData.usedTarget = this.gameObject;

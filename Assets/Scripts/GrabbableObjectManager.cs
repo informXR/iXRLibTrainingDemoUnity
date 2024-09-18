@@ -21,8 +21,8 @@ public class GrabbableObjectManager : MonoBehaviour
     {
         public GrabbableObjectType type;
         public GameObject model;
-        //    public Mesh mesh;
-        //    public List<Material> materials;
+    //    public Mesh mesh;
+    //    public List<Material> materials;
     }
 
     public enum GrabbableObjectType
@@ -76,8 +76,6 @@ public class GrabbableObjectManager : MonoBehaviour
         {
             obj.GetComponent<XRGrabInteractable>().selectExited.AddListener(interactable => targetLocation.OnRelease());
         }
-        obj.GetComponent<XRGrabInteractable>().selectExited.AddListener(interactable => iXR.Event("food_dropped", $"food={obj.GetComponent<GrabbableObject>().type}", obj));
-        obj.GetComponent<XRGrabInteractable>().selectEntered.AddListener(interactable => iXR.Event("food_pickup", $"food={obj.GetComponent<GrabbableObject>().type}", obj));
 
         return obj;
     }

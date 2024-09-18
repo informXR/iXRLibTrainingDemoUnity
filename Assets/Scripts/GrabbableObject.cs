@@ -10,28 +10,6 @@ public class GrabbableObject : MonoBehaviour
 
     private XRGrabInteractable grabInteractable;
 
-
-    private Vector3 pPosition;
-    private Quaternion pRotation;
-    public float getPositionChange()
-    {
-        float positionChange = (gameObject.transform.position - pPosition).magnitude;
-        pPosition = gameObject.transform.position;
-        return positionChange;
-    }
-    public float getRotationChange()
-    {
-        float rotationChange = 1 - Mathf.Abs(Quaternion.Dot(pRotation, gameObject.transform.localRotation));
-        pRotation = gameObject.transform.localRotation;
-        return rotationChange;
-    }
-
-    public void Update()
-    {
-        getPositionChange();
-        getRotationChange();
-    }
-
     private void Awake()
     {
         Id = System.Guid.NewGuid().ToString();

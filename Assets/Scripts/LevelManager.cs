@@ -38,29 +38,20 @@ public class LevelManager : MonoBehaviour
         iXR.LogInfo("Placement Attempted");
         Debug.Log("iXRLib - Placement Attempted");
 
-
-        // Calculate Score - later this should be moved out of level manager into its own score manager class that is persistant
-        double accuracyScore =
-            (1 - completionData.positionDistance / completionData.positionThreshold) * 5 + // Position Score
-            (1 - completionData.rotationDistance / completionData.rotationThreshold) * 5; // Rotation Score
-
         if (completionData.usedType != completionData.targetType)
         {
             dropper.Replace(completionData.targetType, completionData.usedType);
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete(objectId, "place_item", "0", $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType},position_distance={completionData.positionDistance},rotation_distance={completionData.rotationDistance},position_threshold={completionData.positionThreshold},rotation_threshold={completionData.rotationThreshold}");
-            score -= (10 - (accuracyScore)); // Subtract a base of 10 points but decreasse by accuracy score
+            iXR.EventInteractionComplete(objectId, "place_item", "0", $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete(objectId, "place_item", "100", $"placed_fruit={completionData.usedType.ToString()},position_distance={completionData.positionDistance},rotation_distance={completionData.rotationDistance},position_threshold={completionData.positionThreshold},rotation_threshold={completionData.rotationThreshold}");
+            iXR.EventInteractionComplete(objectId, "place_item", "100", $"placed_fruit={completionData.usedType.ToString()}");
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
-
-            score += accuracyScore;
         }
 
         completionData.usedObject.GetComponent<XRGrabInteractable>().colliders.Clear();
@@ -78,16 +69,17 @@ public class LevelManager : MonoBehaviour
         Destroy(completionData.usedTarget.GetComponent<Outline>());
         Destroy(completionData.usedTarget.GetComponent<TargetLocation>());
 
-
-
-
+        // Calculate Score - later this should be moved out of level manager into its own score manager class that is persistant
+        score += (1 / completionData.positionDistance) > 5 ? 5 : 1 / completionData.positionDistance;
+        score += 1 - completionData.rotationDistance;
+        score *= completionData.targetType == completionData.usedType ? 1 : .25;
     }
 
     private IEnumerator PlaySuccessSoundAndCheckVictory()
     {
         successAudioSource.Play();
         yield return new WaitForSeconds(successAudioSource.clip.length);
-
+        
         // Increment completed targets and check for victory
         completedTargets++;
         CheckForVictory();
