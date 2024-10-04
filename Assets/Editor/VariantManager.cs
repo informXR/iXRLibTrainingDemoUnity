@@ -37,7 +37,6 @@ public class VariantManager
     public static void SetVariant(string variant)
     {
         CurrentVariant = variant;
-        Debug.Log($"Set project variant to: {variant}");
         ApplyVariantSettings(variant);
     }
 
@@ -47,7 +46,7 @@ public class VariantManager
 
         if (!File.Exists(jsonPath))
         {
-            //Debug.LogError($"ProjectVariants.json not found at {jsonPath}");
+            Debug.LogError($"ProjectVariants.json not found at {jsonPath}");
             return;
         }
 
@@ -58,39 +57,38 @@ public class VariantManager
 
         if (settings != null)
         {
+            List<string> appliedSettings = new List<string>();
+
             // Apply ProjectSettings
-            string projectSettingsPath = Path.GetFullPath(Path.Combine(Application.dataPath, "..", settings.OverrideSettings.ProjectSettings));
-            //Debug.Log($"Attempting to apply ProjectSettings from: {projectSettingsPath}");
+            string projectSettingsPath = Path.Combine("ProjectSettings", settings.OverrideSettings.ProjectSettings);
             
             if (File.Exists(projectSettingsPath))
             {
-                string assetPath = "ProjectSettings/" + Path.GetFileName(projectSettingsPath);
-                AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
-                Debug.Log($"Applied ProjectSettings: {assetPath}");
+                AssetDatabase.ImportAsset(projectSettingsPath, ImportAssetOptions.ForceUpdate);
+                appliedSettings.Add($"ProjectSettings: {projectSettingsPath}");
             }
             else
             {
-                // Debug.LogError($"ProjectSettings file not found: {projectSettingsPath}");
-                // Debug.Log($"Current directory: {Directory.GetCurrentDirectory()}");
-                // Debug.Log($"Files in ProjectSettings directory:");
-                // foreach (string file in Directory.GetFiles(Path.Combine(Application.dataPath, "..", "ProjectSettings")))
-                // {
-                //    Debug.Log(file);
-                // }
+                appliedSettings.Add($"ProjectSettings file not found: {projectSettingsPath}");
             }
 
             // Apply Addressables settings
             string addressablesPath = Path.Combine(Application.dataPath, settings.OverrideAddressables.informXR);
             if (File.Exists(addressablesPath))
             {
-                //Debug.Log($"Addressables settings should be updated to: {addressablesPath}");
+                // You might want to add code here to actually apply the Addressables settings
+                appliedSettings.Add($"Addressables: {addressablesPath}");
             }
             else
             {
-                Debug.LogError($"Addressables file not found: {addressablesPath}");
+                appliedSettings.Add($"Addressables file not found: {addressablesPath}");
             }
 
             AssetDatabase.Refresh();
+
+            // Log the variant change and applied settings in a single message
+            Debug.Log($"Set project variant to: {variant}\n" +
+                      $"Applied settings:\n{string.Join("\n", appliedSettings)}");
         }
         else
         {
@@ -98,3 +96,4 @@ public class VariantManager
         }
     }
 }
+
