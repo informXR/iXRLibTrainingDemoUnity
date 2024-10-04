@@ -184,39 +184,9 @@ public static class VariantManager
 
         try
         {
-            // Load the main asset
-            UnityEngine.Object mainAsset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(mainAddressablesPath);
-            if (mainAsset == null)
-            {
-                Debug.LogError($"Failed to load asset at path: {mainAddressablesPath}");
-                return;
-            }
-
-            // If the variant asset already exists, delete it
-            if (File.Exists(variantAddressablesPath))
-            {
-                AssetDatabase.DeleteAsset(variantAddressablesPath);
-            }
-
-            // Create a copy of the asset
-            AssetDatabase.CopyAsset(mainAddressablesPath, variantAddressablesPath);
-
-            // Load the new asset
-            UnityEngine.Object variantAsset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(variantAddressablesPath);
-            if (variantAsset == null)
-            {
-                Debug.LogError($"Failed to load new asset at path: {variantAddressablesPath}");
-                return;
-            }
-
-            // Rename the asset object
-            variantAsset.name = Path.GetFileNameWithoutExtension(variantAddressablesPath);
-
-            // Save the asset
-            EditorUtility.SetDirty(variantAsset);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
+            // Simply copy the file without modifying its contents
+            File.Copy(mainAddressablesPath, variantAddressablesPath, true);
+            AssetDatabase.ImportAsset(variantAddressablesPath, ImportAssetOptions.ForceUpdate);
             Debug.Log($"Addressables settings backed up to: {variantAddressablesPath}");
         }
         catch (Exception e)
@@ -224,6 +194,7 @@ public static class VariantManager
             Debug.LogError($"Failed to backup Addressables settings: {e.Message}");
         }
 
+        AssetDatabase.Refresh();
         Debug.Log($"Current variant '{currentVariant}' settings have been backed up.");
     }
 }
