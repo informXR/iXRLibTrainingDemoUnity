@@ -77,52 +77,47 @@ public static class VariantManager
             List<string> appliedSettings = new List<string>();
 
             // Apply ProjectSettings
-            string projectSettingsPath = Path.Combine("ProjectSettings", settings.OverrideSettings.ProjectSettings);
-            string mainProjectSettingsPath = "ProjectSettings/ProjectSettings.asset";
-            
-            if (File.Exists(projectSettingsPath))
+            string mainProjectSettingsFile = "ProjectSettings/ProjectSettings.asset";
+            string variantProjectSettingsFile = $"ProjectSettings/{settings.OverrideSettings.ProjectSettings}";
+            if (File.Exists(variantProjectSettingsFile))
             {
                 try
                 {
-                    AssetDatabase.StartAssetEditing();
-                    
-                    // Read the contents of the variant-specific ProjectSettings file
-                    string settingsContent = File.ReadAllText(projectSettingsPath);
-                    
-                    // Write the contents to the main ProjectSettings.asset file
-                    File.WriteAllText(mainProjectSettingsPath, settingsContent);
-                    
-                    AssetDatabase.ImportAsset(mainProjectSettingsPath, ImportAssetOptions.ForceUpdate);
-                    appliedSettings.Add($"ProjectSettings: {projectSettingsPath} -> {mainProjectSettingsPath}");
+                    File.Copy(variantProjectSettingsFile, mainProjectSettingsFile, true);
+                    AssetDatabase.ImportAsset(mainProjectSettingsFile, ImportAssetOptions.ForceUpdate);
+                    appliedSettings.Add($"ProjectSettings: {variantProjectSettingsFile} -> {mainProjectSettingsFile}");
                 }
                 catch (Exception e)
                 {
                     Debug.LogError($"Failed to apply ProjectSettings: {e.Message}");
-                    appliedSettings.Add($"Failed to apply ProjectSettings: {e.Message}");
-                }
-                finally
-                {
-                    AssetDatabase.StopAssetEditing();
+                    appliedSettings.Add($"ProjectSettings: Failed to apply - {e.Message}");
                 }
             }
             else
             {
-                appliedSettings.Add($"ProjectSettings file not found: {projectSettingsPath}");
+                appliedSettings.Add($"ProjectSettings file not found: {variantProjectSettingsFile}");
             }
 
             // Apply Addressables settings
-            string addressablesPath = Path.Combine(Application.dataPath, settings.OverrideAddressables.informXR);
-            if (File.Exists(addressablesPath))
+            string mainAddressablesFile = "Assets/Resources/informXR.asset";
+            string variantAddressablesFile = $"Assets/Resources/{settings.OverrideAddressables.informXR}";
+            if (File.Exists(variantAddressablesFile))
             {
-                // Actually apply the Addressables settings
-                string destinationPath = Path.Combine(Application.dataPath, "Resources", "informXR.asset");
-                File.Copy(addressablesPath, destinationPath, true);
-                AssetDatabase.ImportAsset("Assets/Resources/informXR.asset", ImportAssetOptions.ForceUpdate);
-                appliedSettings.Add($"Addressables: {addressablesPath} -> {destinationPath}");
+                try
+                {
+                    File.Copy(variantAddressablesFile, mainAddressablesFile, true);
+                    AssetDatabase.ImportAsset(mainAddressablesFile, ImportAssetOptions.ForceUpdate);
+                    appliedSettings.Add($"Addressables: {variantAddressablesFile} -> {mainAddressablesFile}");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Failed to apply Addressables settings: {e.Message}");
+                    appliedSettings.Add($"Addressables: Failed to apply - {e.Message}");
+                }
             }
             else
             {
-                appliedSettings.Add($"Addressables file not found: {addressablesPath}");
+                appliedSettings.Add($"Addressables file not found: {variantAddressablesFile}");
             }
 
             AssetDatabase.Refresh();
@@ -165,13 +160,14 @@ public static class VariantManager
         }
 
         // Backup ProjectSettings
-        string mainProjectSettingsPath = "ProjectSettings/ProjectSettings.asset";
-        string variantProjectSettingsPath = Path.Combine("ProjectSettings", settings.OverrideSettings.ProjectSettings);
+        string mainProjectSettingsFile = "ProjectSettings/ProjectSettings.asset";
+        string variantProjectSettingsFile = $"ProjectSettings/{settings.OverrideSettings.ProjectSettings}";
+        //string variantProjectSettingsFile = Path.Combine("ProjectSettings", settings.OverrideSettings.ProjectSettings);
 
         try
         {
-            File.Copy(mainProjectSettingsPath, variantProjectSettingsPath, true);
-            Debug.Log($"ProjectSettings backed up to: {variantProjectSettingsPath}");
+            File.Copy(mainProjectSettingsFile, variantProjectSettingsFile, true);
+            //Debug.Log($"ProjectSettings backed up to: {variantProjectSettingsFile}");
         }
         catch (Exception e)
         {
@@ -179,15 +175,14 @@ public static class VariantManager
         }
 
         // Backup Addressables settings
-        string mainAddressablesPath = "Assets/Resources/informXR.asset";
-        string variantAddressablesPath = Path.Combine("Assets", settings.OverrideAddressables.informXR);
+        string mainAddressablesFile = "Assets/Resources/informXR.asset";
+        string variantAddressablesFile = $"Assets/Resources/{settings.OverrideAddressables.informXR}";
 
         try
         {
             // Simply copy the file without modifying its contents
-            File.Copy(mainAddressablesPath, variantAddressablesPath, true);
-            AssetDatabase.ImportAsset(variantAddressablesPath, ImportAssetOptions.ForceUpdate);
-            Debug.Log($"Addressables settings backed up to: {variantAddressablesPath}");
+            File.Copy(mainAddressablesFile, variantAddressablesFile, true);
+            //Debug.Log($"Addressables settings backed up to: {variantAddressablesFile}");
         }
         catch (Exception e)
         {

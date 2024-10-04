@@ -6,7 +6,7 @@
           "ProjectSettings": "ProjectSettings_Production.asset"
         },
         "OverrideAddressables": {
-            "informXR": "Resources/informXR_Production.asset"
+            "informXR": "informXR_Production.asset"
         }
       },
       {
@@ -15,7 +15,7 @@
           "ProjectSettings": "ProjectSettings_Development.asset"
         },
         "OverrideAddressables": {
-            "informXR": "Resources/informXR_Development.asset"
+            "informXR": "informXR_Development.asset"
         }
       }
     ]
