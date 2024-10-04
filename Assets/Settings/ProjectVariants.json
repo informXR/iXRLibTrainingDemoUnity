@@ -1,0 +1,22 @@
+{
+    "Variants": [
+      {
+        "Name": "Production",
+        "OverrideSettings": {
+          "ProjectSettings": "ProjectSettings.asset"
+        },
+        "OverrideAddressables": {
+            "informXR": "Resources/informXR.asset"
+        }
+      },
+      {
+        "Name": "Development",
+        "OverrideSettings": {
+          "ProjectSettings": "ProjectSettings_Development.asset"
+        },
+        "OverrideAddressables": {
+            "informXR": "Resources/informXR_Development.asset"
+        }
+      }
+    ]
+  }

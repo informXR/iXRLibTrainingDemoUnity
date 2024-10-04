@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: informXR
-  productName: iXR Training Demo
+  productName: iXR Training Demo (Dev)
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -161,8 +161,8 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.informxr.trainingdemo
-    Standalone: com.informxr.trainingdemo
+    Android: com.informxr.trainingdemodev
+    Standalone: com.informxr.trainingdemodev
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -929,11 +929,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: b7bcf532-a157-4602-93a8-fcad8271187d
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: BoxTraining 2024-06-05_14-43-02
+  organizationId: dine022
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
