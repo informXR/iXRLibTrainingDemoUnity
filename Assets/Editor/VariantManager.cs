@@ -125,6 +125,30 @@ public static class VariantManager
             // Log the variant change and applied settings in a single message
             Debug.Log($"Set project variant to: {variant}\n" +
                       $"Applied settings:\n{string.Join("\n", appliedSettings)}");
+            
+            // Force Unity to reload the project settings
+            EditorApplication.delayCall += () => {
+                // Refresh the AssetDatabase again
+                AssetDatabase.Refresh();
+
+                // Close the Project Settings window if it's open
+                var projectSettingsWindow = EditorWindow.GetWindow(Type.GetType("UnityEditor.ProjectSettingsWindow,UnityEditor"));
+                if (projectSettingsWindow != null)
+                {
+                    projectSettingsWindow.Close();
+                }
+
+                // Reopen the Project Settings window
+                EditorApplication.ExecuteMenuItem("Edit/Project Settings...");
+
+                // Save the project
+                EditorApplication.ExecuteMenuItem("File/Save Project");
+
+                // Optionally, you can add a small delay before reopening the window
+                EditorApplication.delayCall += () => {
+                    EditorApplication.ExecuteMenuItem("Edit/Project Settings...");
+                };
+            };
         }
         else
         {
