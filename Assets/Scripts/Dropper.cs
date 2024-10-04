@@ -31,6 +31,7 @@ public class Dropper : MonoBehaviour
         SetDelay();
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -47,7 +48,6 @@ public class Dropper : MonoBehaviour
     {
         currentDelay = delay + Random.Range(-1f, 1f) * delayRange;
     }
-
 
     public void SpawnRandom()
     {

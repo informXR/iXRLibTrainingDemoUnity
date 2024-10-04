@@ -11,6 +11,19 @@ public class StartupVariantSelector
 
     static void SelectVariant()
     {
+        string savedVariant = VariantManager.LoadSelectedVariant();
+        if (string.IsNullOrEmpty(savedVariant))
+        {
+            ShowVariantSelectionDialog();
+        }
+        else
+        {
+            VariantManager.SetVariant(savedVariant);
+        }
+    }
+
+    static void ShowVariantSelectionDialog()
+    {
         string[] variants = { "Production", "Development" };
         int choice = EditorUtility.DisplayDialogComplex(
             "Select Project Variant",

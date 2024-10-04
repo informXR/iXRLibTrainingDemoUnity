@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,14 +31,30 @@ public class OverrideAddressables
     public string informXR;
 }
 
-public class VariantManager
+public static class VariantManager
 {
+    private const string VariantFilePath = "ProjectSettings/SelectedVariant.txt";
     public static string CurrentVariant { get; private set; }
 
     public static void SetVariant(string variant)
     {
         CurrentVariant = variant;
         ApplyVariantSettings(variant);
+        SaveSelectedVariant(variant);
+    }
+
+    public static string LoadSelectedVariant()
+    {
+        if (File.Exists(VariantFilePath))
+        {
+            return File.ReadAllText(VariantFilePath).Trim();
+        }
+        return null;
+    }
+
+    private static void SaveSelectedVariant(string variant)
+    {
+        File.WriteAllText(VariantFilePath, variant);
     }
 
     private static void ApplyVariantSettings(string variant)
@@ -61,11 +78,32 @@ public class VariantManager
 
             // Apply ProjectSettings
             string projectSettingsPath = Path.Combine("ProjectSettings", settings.OverrideSettings.ProjectSettings);
+            string mainProjectSettingsPath = "ProjectSettings/ProjectSettings.asset";
             
             if (File.Exists(projectSettingsPath))
             {
-                AssetDatabase.ImportAsset(projectSettingsPath, ImportAssetOptions.ForceUpdate);
-                appliedSettings.Add($"ProjectSettings: {projectSettingsPath}");
+                try
+                {
+                    AssetDatabase.StartAssetEditing();
+                    
+                    // Read the contents of the variant-specific ProjectSettings file
+                    string settingsContent = File.ReadAllText(projectSettingsPath);
+                    
+                    // Write the contents to the main ProjectSettings.asset file
+                    File.WriteAllText(mainProjectSettingsPath, settingsContent);
+                    
+                    AssetDatabase.ImportAsset(mainProjectSettingsPath, ImportAssetOptions.ForceUpdate);
+                    appliedSettings.Add($"ProjectSettings: {projectSettingsPath} -> {mainProjectSettingsPath}");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Failed to apply ProjectSettings: {e.Message}");
+                    appliedSettings.Add($"Failed to apply ProjectSettings: {e.Message}");
+                }
+                finally
+                {
+                    AssetDatabase.StopAssetEditing();
+                }
             }
             else
             {
@@ -76,8 +114,11 @@ public class VariantManager
             string addressablesPath = Path.Combine(Application.dataPath, settings.OverrideAddressables.informXR);
             if (File.Exists(addressablesPath))
             {
-                // You might want to add code here to actually apply the Addressables settings
-                appliedSettings.Add($"Addressables: {addressablesPath}");
+                // Actually apply the Addressables settings
+                string destinationPath = Path.Combine(Application.dataPath, "Resources", "informXR.asset");
+                File.Copy(addressablesPath, destinationPath, true);
+                AssetDatabase.ImportAsset("Assets/Resources/informXR.asset", ImportAssetOptions.ForceUpdate);
+                appliedSettings.Add($"Addressables: {addressablesPath} -> {destinationPath}");
             }
             else
             {
@@ -94,6 +135,96 @@ public class VariantManager
         {
             Debug.LogError($"Variant '{variant}' not found in ProjectVariants.json");
         }
+    }
+
+    [MenuItem("Builds/Save Current Settings")]
+    public static void SaveCurrentVariantSettings()
+    {
+        string currentVariant = LoadSelectedVariant();
+        if (string.IsNullOrEmpty(currentVariant))
+        {
+            Debug.LogError("No variant currently selected. Please select a variant first.");
+            return;
+        }
+
+        string jsonPath = Path.Combine(Application.dataPath, "Settings", "ProjectVariants.json");
+        if (!File.Exists(jsonPath))
+        {
+            Debug.LogError($"ProjectVariants.json not found at {jsonPath}");
+            return;
+        }
+
+        string json = File.ReadAllText(jsonPath);
+        ProjectVariants projectVariants = JsonUtility.FromJson<ProjectVariants>(json);
+        VariantSettings settings = projectVariants.Variants.Find(v => v.Name == currentVariant);
+
+        if (settings == null)
+        {
+            Debug.LogError($"Variant '{currentVariant}' not found in ProjectVariants.json");
+            return;
+        }
+
+        // Backup ProjectSettings
+        string mainProjectSettingsPath = "ProjectSettings/ProjectSettings.asset";
+        string variantProjectSettingsPath = Path.Combine("ProjectSettings", settings.OverrideSettings.ProjectSettings);
+
+        try
+        {
+            File.Copy(mainProjectSettingsPath, variantProjectSettingsPath, true);
+            Debug.Log($"ProjectSettings backed up to: {variantProjectSettingsPath}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to backup ProjectSettings: {e.Message}");
+        }
+
+        // Backup Addressables settings
+        string mainAddressablesPath = "Assets/Resources/informXR.asset";
+        string variantAddressablesPath = Path.Combine("Assets", settings.OverrideAddressables.informXR);
+
+        try
+        {
+            // Load the main asset
+            UnityEngine.Object mainAsset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(mainAddressablesPath);
+            if (mainAsset == null)
+            {
+                Debug.LogError($"Failed to load asset at path: {mainAddressablesPath}");
+                return;
+            }
+
+            // If the variant asset already exists, delete it
+            if (File.Exists(variantAddressablesPath))
+            {
+                AssetDatabase.DeleteAsset(variantAddressablesPath);
+            }
+
+            // Create a copy of the asset
+            AssetDatabase.CopyAsset(mainAddressablesPath, variantAddressablesPath);
+
+            // Load the new asset
+            UnityEngine.Object variantAsset = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(variantAddressablesPath);
+            if (variantAsset == null)
+            {
+                Debug.LogError($"Failed to load new asset at path: {variantAddressablesPath}");
+                return;
+            }
+
+            // Rename the asset object
+            variantAsset.name = Path.GetFileNameWithoutExtension(variantAddressablesPath);
+
+            // Save the asset
+            EditorUtility.SetDirty(variantAsset);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Debug.Log($"Addressables settings backed up to: {variantAddressablesPath}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to backup Addressables settings: {e.Message}");
+        }
+
+        Debug.Log($"Current variant '{currentVariant}' settings have been backed up.");
     }
 }
 

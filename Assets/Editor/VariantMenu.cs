@@ -2,13 +2,13 @@ using UnityEditor;
 
 public class VariantMenu
 {
-    [MenuItem("Project/Switch Variant/Production")]
+    [MenuItem("Builds/Switch to Production")]
     public static void SwitchToProduction()
     {
         VariantManager.SetVariant("Production");
     }
 
-    [MenuItem("Project/Switch Variant/Development")]
+    [MenuItem("Builds/Switch to Development")]
     public static void SwitchToDevelopment()
     {
         VariantManager.SetVariant("Development");

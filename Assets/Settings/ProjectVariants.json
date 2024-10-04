@@ -3,10 +3,10 @@
       {
         "Name": "Production",
         "OverrideSettings": {
-          "ProjectSettings": "ProjectSettings.asset"
+          "ProjectSettings": "ProjectSettings_Production.asset"
         },
         "OverrideAddressables": {
-            "informXR": "Resources/informXR.asset"
+            "informXR": "Resources/informXR_Production.asset"
         }
       },
       {
