@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90064ff7e10a4fe4b6ccb224c9cf8250, type: 3}
   m_Name: informXR
   m_EditorClassIdentifier: 
-  appID: 9ff89864-a76d-46ba-9595-696a19fe24be
+  appID: 471fd6fd-f5d0-4096-bc0c-17100c1c4fa0
   orgID: aa
   authSecret: aa
   headsetTracking: 1
