@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90064ff7e10a4fe4b6ccb224c9cf8250, type: 3}
   m_Name: informXR
   m_EditorClassIdentifier: 
-  appID: 35815899-6787-4b2a-b3a7-e614ef79315b
+  appID: change-this-4your-n33d-e614ef79315b
   orgID: aa
   authSecret: aa
   headsetTracking: 1
   trackingUpdatesPerMinute: 4
-  restUrl: https://libapi.informxr.io/v1/
+  restUrl: http://192.168.1.10:8000/v1/
   sendRetriesOnFailure: 3
   sendRetryIntervalSeconds: 3
   sendNextBatchWaitSeconds: 30

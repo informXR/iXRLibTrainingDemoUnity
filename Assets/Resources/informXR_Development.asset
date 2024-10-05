@@ -29,3 +29,5 @@ MonoBehaviour:
   pruneSentItemsOlderThanHours: 12
   maximumCachedItems: 1024
   retainLocalAfterSent: 0
+  debugDisplay: 1
+  debugDisplaySide: 0

@@ -24,7 +24,7 @@ public class StartupVariantSelector
 
     static void ShowVariantSelectionDialog()
     {
-        string[] variants = { "Production", "Development" };
+        string[] variants = { "Production", "Development", "Local" };
         int choice = EditorUtility.DisplayDialogComplex(
             "Select Project Variant",
             "Choose the project variant to load:",

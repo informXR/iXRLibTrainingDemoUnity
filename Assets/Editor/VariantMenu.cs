@@ -13,4 +13,10 @@ public class VariantMenu
     {
         VariantManager.SetVariant("Development");
     }
+
+    [MenuItem("Builds/Switch to Local")]
+    public static void SwitchToLocal()
+    {
+        VariantManager.SetVariant("Local");
+    }
 }
