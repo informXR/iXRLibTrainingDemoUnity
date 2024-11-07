@@ -27,7 +27,7 @@ public class Dropper : MonoBehaviour
             Debug.Log(targetLocation.targetType);
         }
 
-        SetDelay();
+        SetDelay(2f);
     }
 
 
@@ -46,6 +46,11 @@ public class Dropper : MonoBehaviour
     private void SetDelay()
     {
         currentDelay = delay + Random.Range(-1f, 1f) * delayRange;
+    }
+
+    public void SetDelay(float fixedDelay)
+    {
+        currentDelay = fixedDelay;
     }
 
     public void SpawnRandom()
