@@ -29,6 +29,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+      propertyPath: m_AttachTransform
+      value: 
+      objectReference: {fileID: 4373716504005909231}
+    - target: {fileID: 7517549319329480228, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
       propertyPath: m_Colliders.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -167,6 +171,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+--- !u!4 &4373716504005909231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5017849197920860822, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}
+  m_PrefabInstance: {fileID: 8723600838867820665}
+  m_PrefabAsset: {fileID: 0}
 --- !u!64 &8571251322678977549 stripped
 MeshCollider:
   m_CorrespondingSourceObject: {fileID: 1144836882243552372, guid: 521327bdbcb341f782d36f02cab76cb0, type: 3}

@@ -15,12 +15,13 @@ public class LevelManager : MonoBehaviour
     public double score;
     private int totalTargets;
     private int completedTargets;
-    private float startTime;
+    private float startTime; // New variable to track start time
 
     void Start()
     {
         iXR.LogInfo("Content started (LevelManager)");
-        iXR.EventAssessmentStart("stocking_training_unit_1");
+        iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
+        //iXR.Event("assessment_start", "assessment_name=1,scriptName=LevelManager");
         InitializeGame();
     }
 
@@ -43,16 +44,13 @@ public class LevelManager : MonoBehaviour
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
-
+            iXR.EventInteractionComplete(objectId, "place_item", "0", $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-
-            iXR.EventInteractionComplete($"place_item_{objectId}", "True", "Correct spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
-
+            iXR.EventInteractionComplete(objectId, "place_item", "100", $"placed_fruit={completionData.usedType.ToString()}");
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
 
@@ -81,55 +79,40 @@ public class LevelManager : MonoBehaviour
     {
         successAudioSource.Play();
         yield return new WaitForSeconds(successAudioSource.clip.length);
-
+        
         // Increment completed targets and check for victory
         completedTargets++;
-        CheckForCompletion();
+        CheckForVictory();
     }
 
-    private void CheckForCompletion()
+    private void CheckForVictory()
     {
         if (completedTargets >= totalTargets)
         {
-            if (score > 70)
-            {
-                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Pass);
-                PlaySuccessSound();
-            }
-            else
-            {
-                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Fail);
-                PlayFailSound();
-            }
+            float elapsedTime = Time.time - startTime; // Calculate elapsed time
+            iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
+            //iXR.Event("assessment_complete", $"level=stocking_training_unit_1,score={score},duration={elapsedTime},success=true");
+
+            PlayVictorySound();
+            // You can add more victory actions here, like showing a UI panel, etc.
         }
     }
 
-    private void PlaySuccessSound()
+    private void PlayVictorySound()
     {
         if (victoryAudioSource != null && !victoryAudioSource.isPlaying)
         {
             victoryAudioSource.Play();
-            Debug.Log("Level Completed! Success!");
+            Debug.Log("Level Completed! Victory!");
 
-            StartCoroutine(RestartAfterCompletionSound(victoryAudioSource.clip.length));
+            StartCoroutine(RestartAfterVictorySound());
         }
     }
 
-    private void PlayFailSound()
+    private IEnumerator RestartAfterVictorySound()
     {
-        if (failureAudioSource != null && !failureAudioSource.isPlaying)
-        {
-            failureAudioSource.Play();
-            Debug.Log("Level Completed! Failure!");
-
-            StartCoroutine(RestartAfterCompletionSound(failureAudioSource.clip.length));
-        }
-    }
-
-    private IEnumerator RestartAfterCompletionSound(float delay)
-    {
-        // Wait for the sound to finish playing
-        yield return new WaitForSeconds(delay);
+        // Wait for the victory sound to finish playing
+        yield return new WaitForSeconds(victoryAudioSource.clip.length);
         RestartExperience();
     }
 

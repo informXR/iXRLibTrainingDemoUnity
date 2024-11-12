@@ -21,8 +21,6 @@ public class GrabbableObjectManager : MonoBehaviour
     {
         public GrabbableObjectType type;
         public GameObject model;
-    //    public Mesh mesh;
-    //    public List<Material> materials;
     }
 
     public enum GrabbableObjectType
@@ -60,8 +58,6 @@ public class GrabbableObjectManager : MonoBehaviour
         }
     }
 
-    public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData) { return CreateGrabbableObject(grabbableObjectData, transform); }
-    public GameObject CreateGrabbableObject(GrabbableObjectType grabbableObjectType) { return CreateGrabbableObject(grabbableObjectType, transform); }
     public GameObject CreateGrabbableObject(GrabbableObjectType grabbableObjectType, Transform transform) { return CreateGrabbableObject(getGrabbableObjectData(grabbableObjectType), transform); }
     public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData, Transform transform)
     {

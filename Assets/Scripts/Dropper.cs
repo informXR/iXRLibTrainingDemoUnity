@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class Dropper : MonoBehaviour
 {
@@ -17,21 +18,20 @@ public class Dropper : MonoBehaviour
     void Start()
     {
         queue = new List<GrabbableObjectManager.GrabbableObjectType>();
-        TargetLocation[] targetLocations = GameObject.FindObjectsOfType<TargetLocation>();
+        XRSocketInteractor[] targetLocations = GameObject.FindObjectsOfType<XRSocketInteractor>();
         Debug.Log(targetLocations.Length);
         iXR.EventLevelStart("1", "scriptName=Dropper");
+        //iXR.Event("level_start", "level=1,scriptName=Dropper");
         iXR.LogInfo(targetLocations.Length.ToString());
-        foreach (TargetLocation targetLocation in targetLocations)
+        foreach (var targetLocation in targetLocations)
         {
-            queue.Add(targetLocation.targetType);
-            Debug.Log(targetLocation.targetType);
+            queue.Add(targetLocation.GetComponentInParent<GridManager>().Type);
+            Debug.Log(targetLocation.GetComponentInParent<GridManager>().Type);
         }
 
-        SetDelay(2f);
+        SetDelay();
     }
 
-
-    // Update is called once per frame
     void Update()
     {
         totalTime += Time.deltaTime;
@@ -48,10 +48,6 @@ public class Dropper : MonoBehaviour
         currentDelay = delay + Random.Range(-1f, 1f) * delayRange;
     }
 
-    public void SetDelay(float fixedDelay)
-    {
-        currentDelay = fixedDelay;
-    }
 
     public void SpawnRandom()
     {
@@ -61,13 +57,15 @@ public class Dropper : MonoBehaviour
         int index = Random.Range(0, uniqueValues.Count);
         GrabbableObjectManager.GrabbableObjectType type = uniqueValues[index];
         Remove(type);
-        // Debug.Log(type);
-        GameObject obj = GrabbableObjectManager.getInstance().CreateGrabbableObject(type, this.transform);
+        GameObject obj =Instantiate(GrabbableObjectManager.getInstance().getGrabbableObjectData(type).model, 
+        this.transform.position, Quaternion.identity);
         obj.GetComponent<Rigidbody>().AddForce(Vector3.down * downForce);
         obj.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        obj.AddComponent<ElementTag>().type = type;
+        obj.GetComponent<Rigidbody>().isKinematic = false;
+        obj.GetComponent<Rigidbody>().useGravity = true;
     }
 
-    // Gets rid of A, adds B
     public void Replace(GrabbableObjectManager.GrabbableObjectType a, GrabbableObjectManager.GrabbableObjectType b)
     {
         Remove(a);

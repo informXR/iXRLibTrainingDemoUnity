@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.informxr.unity": "https://github.com/informXR/iXRLibForUnity.git",
+    "com.informxr.unity-sdk": "https://github.com/informXR/iXRLibUnitySDK.git",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.feature.development": "1.0.1",
     "com.unity.feature.vr": "1.0.0",
@@ -8,6 +8,7 @@
     "com.unity.render-pipelines.universal": "14.0.11",
     "com.unity.textmeshpro": "3.0.9",
     "com.unity.timeline": "1.7.6",
+    "com.unity.toolchain.win-x86_64-linux-x86_64": "2.0.10",
     "com.unity.visualscripting": "1.9.4",
     "com.unity.xr.interaction.toolkit": "2.5.4",
     "com.unity.xr.management": "4.5.0",
