@@ -19,9 +19,8 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        iXR.LogInfo("Content started (LevelManager)");
-        iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
-        //iXR.Event("assessment_start", "assessment_name=1,scriptName=LevelManager");
+        //iXR.LogInfo("Content started (LevelManager)");
+        //iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
         InitializeGame();
     }
 
@@ -35,7 +34,7 @@ public class LevelManager : MonoBehaviour
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
-        iXR.LogInfo("Placement Attempted");
+        //iXR.LogInfo("Placement Attempted");
         Debug.Log("iXRLib - Placement Attempted");
 
         if (completionData.usedType != completionData.targetType)
@@ -44,13 +43,13 @@ public class LevelManager : MonoBehaviour
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete(objectId, "place_item", "0", $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
+            //iXR.EventInteractionComplete(objectId, "place_item", "0", iXR.InteractionType.Text, $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete(objectId, "place_item", "100", $"placed_fruit={completionData.usedType.ToString()}");
+            //iXR.EventInteractionComplete(objectId, "place_item", "100", iXR.InteractionType.Text, $"placed_fruit={completionData.usedType.ToString()}");
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
 
@@ -90,8 +89,7 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
-            //iXR.Event("assessment_complete", $"level=stocking_training_unit_1,score={score},duration={elapsedTime},success=true");
+            //iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
@@ -209,12 +207,12 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
-            iXR.LogInfo("Game components reinitialized successfully");
+            //iXR.LogInfo("Game components reinitialized successfully");
         }
         catch (Exception e)
         {
             Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
-            iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
+            //iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
         }
     }
 }

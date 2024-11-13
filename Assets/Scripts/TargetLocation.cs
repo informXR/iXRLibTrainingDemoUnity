@@ -51,7 +51,7 @@ public class TargetLocation : MonoBehaviour
     public void OnRelease()
     {
         string jsonData = JsonUtility.ToJson(completionData);
-        iXR.LogInfo(jsonData);
+        //iXR.LogInfo(jsonData);
         Debug.Log(jsonData);
         if (!completionData.validPlacement || OnCompleted == null) return;
         isCompleted = true;

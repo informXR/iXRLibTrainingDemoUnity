@@ -22,7 +22,7 @@ public class ExitButton : MonoBehaviour
 
     private void OnSelect(SelectEnterEventArgs args)
     {
-        iXR.LogInfo("Exit button pressed");
+        //iXR.LogInfo("Exit button pressed");
         Debug.Log("Exit button pressed");
         StartCoroutine(ExitGame());
     }
