@@ -87,8 +87,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 */xtempburstlibs/*/*.txt
-/TestApp_BackUpThisFolder_ButDontShipItWithYourGame
-/iXR Training_BurstDebugInformation_DoNotShip
+
 ProjectSettings/SelectedVariant.txt
 ProjectSettings/ProjectSettings.asset
 Assets/Resources/informXR.asset.meta
@@ -96,3 +95,7 @@ Assets/Resources/informXR.asset
 /iXR Training Demo_BurstDebugInformation_DoNotShip
 /iXR Training Demo (Dev)_BurstDebugInformation_DoNotShip
 /iXR Training Demo (Local)_BurstDebugInformation_DoNotShip
+/iXRLibTrainingDemo_dev_BurstDebugInformation_DoNotShip
+/BoxTraining_BurstDebugInformation_DoNotShip2
+/TestApp_BackUpThisFolder_ButDontShipItWithYourGame
+/iXR Training_BurstDebugInformation_DoNotShip
