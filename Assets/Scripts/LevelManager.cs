@@ -43,14 +43,14 @@ public class LevelManager : MonoBehaviour
             dropper.Replace(completionData.targetType, completionData.usedType);
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete(objectId, "place_item", "0", $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
+            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id;
+            iXR.EventInteractionComplete(objectId, "place_item", "0", iXR.InteractionType.Text, $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
-            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete(objectId, "place_item", "100", $"placed_fruit={completionData.usedType.ToString()}");
+            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id;
+            iXR.EventInteractionComplete(objectId, "place_item", "100", iXR.InteractionType.Text, $"placed_fruit={completionData.usedType.ToString()}");
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
 
