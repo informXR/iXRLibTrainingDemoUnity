@@ -88,3 +88,6 @@ crashlytics-build.properties
 */xtempburstlibs/*/*.txt
 /TestApp_BackUpThisFolder_ButDontShipItWithYourGame
 /iXR Training_BurstDebugInformation_DoNotShip
+/Test_BurstDebugInformation_DoNotShip
+/IXRLibTraining_BurstDebugInformation_DoNotShip
+/BoxTraining_BurstDebugInformation_DoNotShip
