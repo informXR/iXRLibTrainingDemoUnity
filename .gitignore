@@ -86,9 +86,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 */xtempburstlibs/*/*.txt
-/TestApp_BackUpThisFolder_ButDontShipItWithYourGame
-/iXR Training_BurstDebugInformation_DoNotShip
-/Test_BurstDebugInformation_DoNotShip
-/IXRLibTraining_BurstDebugInformation_DoNotShip
-/BoxTraining_BurstDebugInformation_DoNotShip
-/iXRLibTrainingDemo_dev_BurstDebugInformation_DoNotShip
+
+# Dynamic debug and backup folders
+*_ButDontShip*/
+*_DoNotShip*/
