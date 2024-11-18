@@ -1,32 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class Dropper : MonoBehaviour
 {
-
-    private List<GrabbableObjectManager.GrabbableObjectType> queue;
-    public float delay = 10;
-    public float delayRange = 3;
-    public float downForce = 10;
+    private Dictionary<GrabbableObjectManager.GrabbableObjectType, int> spawnQueue; // Maps types to the count of objects to spawn
+    public float delay = 10f;
+    public float delayRange = 3f;
+    public float downForce = 10f;
     private float currentDelay = 0;
     private float totalTime = 0;
     private float lastTime = 0;
 
-    // Start is called before the first frame update
     void Start()
     {
-        queue = new List<GrabbableObjectManager.GrabbableObjectType>();
-        XRSocketInteractor[] targetLocations = GameObject.FindObjectsOfType<XRSocketInteractor>();
-        Debug.Log(targetLocations.Length);
-        //iXR.EventLevelStart("1", "scriptName=Dropper");
-        //iXR.LogInfo(targetLocations.Length.ToString());
-        foreach (var targetLocation in targetLocations)
-        {
-            queue.Add(targetLocation.GetComponentInParent<GridManager>().Type);
-            Debug.Log(targetLocation.GetComponentInParent<GridManager>().Type);
-        }
+        spawnQueue = new Dictionary<GrabbableObjectManager.GrabbableObjectType, int>();
+        PopulateSpawnQueue();
 
         SetDelay();
     }
@@ -34,11 +23,11 @@ public class Dropper : MonoBehaviour
     void Update()
     {
         totalTime += Time.deltaTime;
-        if (totalTime > lastTime + currentDelay)
+        if (totalTime > lastTime + currentDelay && spawnQueue.Count > 0)
         {
             SetDelay();
             lastTime = totalTime;
-            SpawnRandom();
+            SpawnNext();
         }
     }
 
@@ -47,52 +36,97 @@ public class Dropper : MonoBehaviour
         currentDelay = delay + Random.Range(-1f, 1f) * delayRange;
     }
 
-
-    public void SpawnRandom()
+    private void PopulateSpawnQueue()
     {
-        if (queue.Count == 0) return;
+        // Clear the spawn queue
+        spawnQueue.Clear();
 
-        List<GrabbableObjectManager.GrabbableObjectType> uniqueValues = GetUniqueValues(queue);
-        int index = Random.Range(0, uniqueValues.Count);
-        GrabbableObjectManager.GrabbableObjectType type = uniqueValues[index];
-        Remove(type);
-        GameObject obj =Instantiate(GrabbableObjectManager.getInstance().getGrabbableObjectData(type).model, 
-        this.transform.position, Quaternion.identity);
-        obj.GetComponent<Rigidbody>().AddForce(Vector3.down * downForce);
-        obj.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        obj.AddComponent<ElementTag>().type = type;
-        obj.GetComponent<Rigidbody>().isKinematic = false;
-        obj.GetComponent<Rigidbody>().useGravity = true;
+        // Find all GridManagers and calculate required objects
+        GridManager[] gridManagers = FindObjectsOfType<GridManager>();
+        foreach (var gridManager in gridManagers)
+        {
+            int emptySpaces = gridManager.blankSpaces; // Number of empty spaces in this grid
+            GrabbableObjectManager.GrabbableObjectType type = gridManager.Type;
+
+            if (emptySpaces > 0)
+            {
+                // Add the type to the spawn queue with the required count
+                if (spawnQueue.ContainsKey(type))
+                {
+                    spawnQueue[type] += emptySpaces;
+                }
+                else
+                {
+                    spawnQueue[type] = emptySpaces;
+                }
+            }
+        }
+    }
+
+    private void SpawnNext()
+    {
+        // If the spawn queue is empty, repopulate
+        if (spawnQueue.Count == 0)
+        {
+            PopulateSpawnQueue();
+            return;
+        }
+
+        // Get the next type to spawn
+        var enumerator = spawnQueue.GetEnumerator();
+        enumerator.MoveNext();
+        var typeToSpawn = enumerator.Current.Key;
+        int count = enumerator.Current.Value;
+
+        // Spawn the object
+        GameObject obj = Instantiate(
+            GrabbableObjectManager.getInstance().getGrabbableObjectData(typeToSpawn).model,
+            this.transform.position,
+            Quaternion.identity
+        );
+
+        // Set up the object
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.AddForce(Vector3.down * downForce);
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
+
+        obj.AddComponent<ElementTag>().type = typeToSpawn;
+
+        // Update the spawn queue
+        spawnQueue[typeToSpawn]--;
+        if (spawnQueue[typeToSpawn] <= 0)
+        {
+            spawnQueue.Remove(typeToSpawn);
+        }
     }
 
     public void Replace(GrabbableObjectManager.GrabbableObjectType a, GrabbableObjectManager.GrabbableObjectType b)
     {
-        Remove(a);
-        Add(b);
-    }
+        if (spawnQueue.ContainsKey(a))
+        {
+            int count = spawnQueue[a];
+            spawnQueue.Remove(a);
 
-    public void Add(GrabbableObjectManager.GrabbableObjectType type)
-    {
-        queue.Add(type);
-    }
-
-    public void Remove(GrabbableObjectManager.GrabbableObjectType type)
-    {
-        queue.Remove(type);
-    }
-
-    private List<T> GetUniqueValues<T>(List<T> list)
-    {
-        List<T> uniqueValues = new List<T>();
-        foreach (T entry in list)
-            if (!uniqueValues.Contains(entry))
-                uniqueValues.Add(entry);
-        return uniqueValues;
+            if (spawnQueue.ContainsKey(b))
+            {
+                spawnQueue[b] += count;
+            }
+            else
+            {
+                spawnQueue[b] = count;
+            }
+        }
     }
 
     public void ResetDropper()
     {
-        queue.Clear();
+        spawnQueue.Clear();
+        PopulateSpawnQueue();
         SetDelay();
     }
 }

@@ -4,18 +4,17 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class GridManager : MonoBehaviour
 {
-    public GameObject[] objectPrefabs; // Prefabs for each object type
-    public GameObject emptySlotPrefab; // Prefab for empty slots
-    public Vector2 gridSpacing = new Vector2(2, 2); // Spacing between grid objects
-    public int rows = 5; // Number of rows in the grid (Z axis)
-    public int columns = 5; // Number of columns in the grid (X axis)
-    public int blankSpaces = 5; // Number of blank spaces in the grid
-    public Vector3 initialPosition = new Vector3(0, 1, 0); // Position for the first element (Y should match shelfHeight)
+    public GameObject[] objectPrefabs; 
+    public GameObject emptySlotPrefab; 
+    public Vector2 gridSpacing = new Vector2(2, 2); 
+    public int rows = 5;      public int columns = 5;
+    public int blankSpaces = 5; 
+    public Vector3 initialPosition = new Vector3(0, 1, 0); 
     public Vector3 InitialRotation;
     public float shelfHeight = 1.0f; // Height of the shelf surface
 
     private List<Vector3> occupiedPositions = new List<Vector3>();
-    public GrabbableObjectManager.GrabbableObjectType Type; // Type for this GridManager
+    public GrabbableObjectManager.GrabbableObjectType Type; 
     public int score = 0; // Score counter
 
     private void Start()
@@ -27,7 +26,6 @@ public class GridManager : MonoBehaviour
     {
         ClearGrid();
 
-        // Create blank spaces at random positions
         HashSet<Vector3> blankPositions = new HashSet<Vector3>();
         while (blankPositions.Count < blankSpaces)
         {
@@ -35,7 +33,6 @@ public class GridManager : MonoBehaviour
             blankPositions.Add(randomPosition);
         }
 
-        // Place objects in grid, adding empty slots at blank positions
         for (int x = 0; x < columns; x++)
         {
             for (int z = 0; z < rows; z++)
@@ -84,13 +81,15 @@ public class GridManager : MonoBehaviour
         emptySlot.transform.localPosition = localPosition;
         emptySlot.transform.localRotation = Quaternion.Euler(InitialRotation);
 
-        // Add XRSocketInteractor and configure it to validate types
-        XRSocketInteractor socket = emptySlot.GetComponent<XRSocketInteractor>();
-        socket.selectEntered.AddListener((s) => {
-            OnObjectSocketed(s, Type);
-        });
+        if (emptySlot.GetComponent<XRSocketInteractor>() != null)
+        {
+            XRSocketInteractor socket = emptySlot.GetComponent<XRSocketInteractor>();
+            socket.selectEntered.AddListener((s) =>
+            {
+                OnObjectSocketed(s, Type);
+            });
+        }
 
-        // Make the empty slot transparent
         MakeMaterialTransparent(emptySlot);
 
         occupiedPositions.Add(localPosition);
@@ -98,7 +97,6 @@ public class GridManager : MonoBehaviour
 
     private void OnObjectRemoved(SelectExitEventArgs args)
     {
-        // Optional: Handle when objects are removed from a socket if needed.
         Debug.Log("Object removed from socket.");
     }
 

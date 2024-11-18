@@ -26,52 +26,9 @@ public class LevelManager : MonoBehaviour
 
     private void InitializeGame()
     {
-        totalTargets = FindObjectsOfType<TargetLocation>().Length;
         completedTargets = 0;
         score = 0;
         startTime = Time.time; // Initialize start time when the game begins
-    }
-
-    public void CompleteTask(TargetLocation.CompletionData completionData)
-    {
-        //iXR.LogInfo("Placement Attempted");
-        Debug.Log("iXRLib - Placement Attempted");
-
-        if (completionData.usedType != completionData.targetType)
-        {
-            dropper.Replace(completionData.targetType, completionData.usedType);
-
-            completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
-            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            //iXR.EventInteractionComplete(objectId, "place_item", "0", iXR.InteractionType.Text, $"placed_fruit={completionData.usedType.ToString()},intended_fruit={completionData.targetType}");
-            StartCoroutine(PlayFailSoundThenRestart());
-        }
-        else
-        {
-            string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            //iXR.EventInteractionComplete(objectId, "place_item", "100", iXR.InteractionType.Text, $"placed_fruit={completionData.usedType.ToString()}");
-            StartCoroutine(PlaySuccessSoundAndCheckVictory());
-        }
-
-        completionData.usedObject.GetComponent<XRGrabInteractable>().colliders.Clear();
-
-        // Disable the collision box of the usedTarget
-        Collider targetCollider = completionData.usedTarget.GetComponent<Collider>();
-        if (targetCollider != null)
-        {
-            targetCollider.enabled = false;
-        }
-
-        completionData.usedTarget.GetComponent<MeshRenderer>().materials = GrabbableObjectManager.getInstance().getGrabbableObjectData(completionData.usedType).model.GetComponent<MeshRenderer>().sharedMaterials;
-
-        Destroy(completionData.usedObject);
-        Destroy(completionData.usedTarget.GetComponent<Outline>());
-        Destroy(completionData.usedTarget.GetComponent<TargetLocation>());
-
-        // Calculate Score - later this should be moved out of level manager into its own score manager class that is persistant
-        score += (1 / completionData.positionDistance) > 5 ? 5 : 1 / completionData.positionDistance;
-        score += 1 - completionData.rotationDistance;
-        score *= completionData.targetType == completionData.usedType ? 1 : .25;
     }
 
     private IEnumerator PlaySuccessSoundAndCheckVictory()
@@ -132,37 +89,36 @@ public class LevelManager : MonoBehaviour
     private void InitializeAndReinitializeGame()
     {
         // Initialize game state
-        totalTargets = FindObjectsOfType<TargetLocation>().Length;
         completedTargets = 0;
         score = 0;
         startTime = Time.time;
 
         try
         {
-            // Reset the Dropper
-            if (dropper != null)
-            {
-                dropper.ResetDropper();
-                TargetLocation[] targetLocations = FindObjectsOfType<TargetLocation>();
-                foreach (TargetLocation targetLocation in targetLocations)
-                {
-                    dropper.Add(targetLocation.targetType);
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Dropper not found during reinitialization");
-            }
+        //     // Reset the Dropper
+        //     if (dropper != null)
+        //     {
+        //         dropper.ResetDropper();
+        //         TargetLocation[] targetLocations = FindObjectsOfType<TargetLocation>();
+        //         foreach (TargetLocation targetLocation in targetLocations)
+        //         {
+        //             dropper.Add(targetLocation.targetType);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         Debug.LogWarning("Dropper not found during reinitialization");
+        //     }
 
-            // Reinitialize GrabbableObjectManager
-            GrabbableObjectManager.getInstance().Start();
+        //     // Reinitialize GrabbableObjectManager
+        //     GrabbableObjectManager.getInstance().Start();
 
-            // Reset all TargetLocations
-            TargetLocation[] allTargetLocations = FindObjectsOfType<TargetLocation>();
-            foreach (TargetLocation targetLocation in allTargetLocations)
-            {
-                targetLocation.ResetState();
-            }
+        //     // Reset all TargetLocations
+        //     TargetLocation[] allTargetLocations = FindObjectsOfType<TargetLocation>();
+        //     foreach (TargetLocation targetLocation in allTargetLocations)
+        //     {
+        //         targetLocation.ResetState();
+        //     }
 
             // Re-enable all XR Interactors and Interactables
             XRBaseInteractor[] interactors = FindObjectsOfType<XRBaseInteractor>();

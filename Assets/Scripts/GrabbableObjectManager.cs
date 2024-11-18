@@ -58,24 +58,6 @@ public class GrabbableObjectManager : MonoBehaviour
         }
     }
 
-    public GameObject CreateGrabbableObject(GrabbableObjectType grabbableObjectType, Transform transform) { return CreateGrabbableObject(getGrabbableObjectData(grabbableObjectType), transform); }
-    public GameObject CreateGrabbableObject(GrabbableObjectData grabbableObjectData, Transform transform)
-    {
-        GameObject obj = Instantiate(grabbableObjectPrefab, transform);
-        obj.GetComponent<MeshFilter>().mesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
-        obj.GetComponent<MeshCollider>().sharedMesh = grabbableObjectData.model.GetComponent<MeshFilter>().sharedMesh;
-        obj.GetComponent<GrabbableObject>().type = grabbableObjectData.type;
-        obj.GetComponent<MeshRenderer>().materials = grabbableObjectData.model.GetComponent<MeshRenderer>().sharedMaterials;
-        // Get All Targets
-        TargetLocation[] targetLocations = FindObjectsOfType(typeof(TargetLocation)) as TargetLocation[];
-        foreach (TargetLocation targetLocation in targetLocations)
-        {
-            obj.GetComponent<XRGrabInteractable>().selectExited.AddListener(interactable => targetLocation.OnRelease());
-        }
-
-        return obj;
-    }
-
     public GrabbableObjectData getGrabbableObjectData(GrabbableObjectType type)
     {
         foreach (GrabbableObjectData data in grabbableObjectList)

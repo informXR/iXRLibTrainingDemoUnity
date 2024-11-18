@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class BasicUI : MonoBehaviour
 {
-    public Button quitButton;     // Assign this button in the Inspector for quitting the game
-    public Button restartButton;  // Assign this button in the Inspector for restarting the level
-
+    public Button quitButton;
+    public Button restartButton;  
+    public GameObject StatusText;
     void Start()
     {
         quitButton.onClick.AddListener(QuitGame);
