@@ -29,7 +29,7 @@ public class GridManagerManager : MonoBehaviour
     {
         foreach (var gridManager in gridManagers)
         {
-            gridManager.blankSpaces = Random.Range(1, 5); // Randomize between 1 and 4
+            gridManager.blankSpaces = Random.Range(1, 3); // Randomize between 1 and 4
         }
     }
 
@@ -37,6 +37,7 @@ public class GridManagerManager : MonoBehaviour
     {
         currentScore += points;
         UpdateScore(currentScore);
+        SoundManager.Instance.PlayDropSound();
     }
 
     private void UpdateScore(int score)
@@ -44,5 +45,9 @@ public class GridManagerManager : MonoBehaviour
         // Replace this with UI update logic
         Debug.Log($"Current Score: {score}/{maxScore}");
         ScoreText.text = $"Current Score: {score}/{maxScore}";
+
+        if(score == maxScore){
+            SoundManager.Instance.PlayGameCompleteSound();
+        }
     }
 }
