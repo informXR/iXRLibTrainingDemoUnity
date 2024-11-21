@@ -16,6 +16,7 @@ public class BasicUI : MonoBehaviour
     private void QuitGame()
     {
         // Exits the application (does nothing in the editor)
+        SoundManager.Instance.PlayButtonClickSound();
         Debug.Log("Quitting game...");
         Application.Quit();
     }
@@ -23,6 +24,7 @@ public class BasicUI : MonoBehaviour
     private void RestartLevel()
     {
         // Reloads the current active scene
+        SoundManager.Instance.PlayButtonClickSound();
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.name);
     }
