@@ -19,8 +19,11 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        //iXR.LogInfo("Content started (LevelManager)");
-        //iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
+        if (iXR != null)
+        {
+            iXR.LogInfo("Content started (LevelManager)");
+            iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
+        }
         InitializeGame();
     }
 
@@ -46,7 +49,10 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
             float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            //iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
+            if (iXR != null)
+            {
+                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
+            }
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
@@ -163,12 +169,18 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
-            //iXR.LogInfo("Game components reinitialized successfully");
+            if (iXR != null)
+            {
+                iXR.LogInfo("Game components reinitialized successfully");
+            }
         }
         catch (Exception e)
         {
             Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
-            //iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
+            if (iXR != null)
+            {
+                iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
+            }
         }
     }
 }
