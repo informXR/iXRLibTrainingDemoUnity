@@ -75,6 +75,7 @@ public class CustomSocketFilter : MonoBehaviour
             pendingInteractable = null;
             isValidSocket = false;
             statusText.SetActive(false);
+            FindObjectOfType<FPSInteractor>().ReleaseObject();
         }
     }
 

@@ -60,10 +60,10 @@ public class FPSInteractor : MonoBehaviour
             TryGrabObject();
         }
 
-        if (Input.GetKeyDown(releaseKey) && grabbedObject != null)
-        {
-            ReleaseObject();
-        }
+        // if (Input.GetKeyDown(releaseKey) && grabbedObject != null)
+        // {
+        //     ReleaseObject();
+        // }
     }
 
     private void TryGrabObject()
@@ -87,7 +87,7 @@ public class FPSInteractor : MonoBehaviour
         }
     }
 
-    private void ReleaseObject()
+    public void ReleaseObject()
     {
         if (grabbedObject != null)
         {
