@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -22,10 +20,7 @@ public class GrabbableObject : MonoBehaviour
 
     private void OnGrab(SelectEnterEventArgs args)
     {
-        if (iXR != null)
-        {
-            iXR.EventInteractionStart(Id, "place_item");
-        }
+        iXR.EventInteractionStart(Id, "place_item");
     }
 
     private void OnDestroy()

@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.SceneManagement;
-using UnityEngine.Android;
 
 public class LevelManager : MonoBehaviour
 {
@@ -15,15 +12,11 @@ public class LevelManager : MonoBehaviour
     public double score;
     private int totalTargets;
     private int completedTargets;
-    private float startTime; // New variable to track start time
 
-    void Start()
+    private void Start()
     {
-        if (iXR != null)
-        {
-            iXR.LogInfo("Content started (LevelManager)");
-            iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
-        }
+        iXR.LogInfo("Content started (LevelManager)");
+        iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
         InitializeGame();
     }
 
@@ -31,7 +24,6 @@ public class LevelManager : MonoBehaviour
     {
         completedTargets = 0;
         score = 0;
-        startTime = Time.time; // Initialize start time when the game begins
     }
 
     private IEnumerator PlaySuccessSoundAndCheckVictory()
@@ -48,11 +40,7 @@ public class LevelManager : MonoBehaviour
     {
         if (completedTargets >= totalTargets)
         {
-            float elapsedTime = Time.time - startTime; // Calculate elapsed time
-            if (iXR != null)
-            {
-                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
-            }
+            iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
 
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
@@ -97,7 +85,6 @@ public class LevelManager : MonoBehaviour
         // Initialize game state
         completedTargets = 0;
         score = 0;
-        startTime = Time.time;
 
         try
         {
@@ -169,18 +156,12 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
-            if (iXR != null)
-            {
-                iXR.LogInfo("Game components reinitialized successfully");
-            }
+            iXR.LogInfo("Game components reinitialized successfully");
         }
         catch (Exception e)
         {
             Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
-            if (iXR != null)
-            {
-                iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
-            }
+            iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
         }
     }
 }
