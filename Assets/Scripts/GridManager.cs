@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class GridManager : MonoBehaviour
@@ -17,8 +18,9 @@ public class GridManager : MonoBehaviour
     public GrabbableObjectManager.GrabbableObjectType Type; 
     public int score = 0; // Score counter
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(1);
         GenerateGrid();
     }
 

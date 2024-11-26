@@ -29,7 +29,7 @@ public class GridManagerManager : MonoBehaviour
     {
         foreach (var gridManager in gridManagers)
         {
-            gridManager.blankSpaces = Random.Range(1, 2); // Randomize between 1 and 4
+            gridManager.blankSpaces = Random.Range(1, 3); // Randomize between 1 and 4
         }
     }
 
