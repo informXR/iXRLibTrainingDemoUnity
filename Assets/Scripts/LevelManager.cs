@@ -15,8 +15,10 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+#if USE_IXRLIB
         iXR.LogInfo("Content started (LevelManager)");
         iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
+#endif
         InitializeGame();
     }
 
@@ -40,8 +42,9 @@ public class LevelManager : MonoBehaviour
     {
         if (completedTargets >= totalTargets)
         {
+#if USE_IXRLIB
             iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
-
+#endif
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
         }
@@ -156,12 +159,16 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
+#if USE_IXRLIB
             iXR.LogInfo("Game components reinitialized successfully");
+#endif
         }
         catch (Exception e)
         {
             Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
+#if USE_IXRLIB
             iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
+#endif
         }
     }
 }

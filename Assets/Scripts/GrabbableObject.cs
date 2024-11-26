@@ -20,7 +20,9 @@ public class GrabbableObject : MonoBehaviour
 
     private void OnGrab(SelectEnterEventArgs args)
     {
+#if USE_IXRLIB
         iXR.EventInteractionStart(Id, "place_item");
+#endif
     }
 
     private void OnDestroy()
