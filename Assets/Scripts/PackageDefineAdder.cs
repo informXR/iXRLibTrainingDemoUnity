@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
-using UnityEngine;
 
 [InitializeOnLoad]
 public class PackageDefineAdder
@@ -13,12 +12,10 @@ public class PackageDefineAdder
         string packageManifest = File.ReadAllText("Packages/manifest.json");
         if (packageManifest.Contains(packageName))
         {
-            Debug.Log("ADDING");
             AddDefine(define);
         }
         else
         {
-            Debug.Log("REMOVING");
             RemoveDefine(define);
         }
     }
