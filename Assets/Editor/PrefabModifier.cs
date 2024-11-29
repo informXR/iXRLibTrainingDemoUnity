@@ -8,6 +8,9 @@ public class PrefabModifier : EditorWindow
     private string sourceFolderPath = "Assets/Prefabs"; // Folder containing the original prefabs
     private string targetFolderPath = "Assets/ModifiedPrefabs"; // Folder to save modified prefabs
 
+    private string sourceFolderPathForOutline = "Assets/SourcePrefabs";
+    private Material outlineMaterial;
+
     [MenuItem("Tools/Modify Prefabs for Sockets")]
     public static void ShowWindow()
     {
@@ -24,6 +27,14 @@ public class PrefabModifier : EditorWindow
         if (GUILayout.Button("Modify Prefabs"))
         {
             ModifyPrefabs();
+        }
+
+        sourceFolderPath = EditorGUILayout.TextField("Source Folder Path For Outline", sourceFolderPath);
+        outlineMaterial = (Material)EditorGUILayout.ObjectField("Outline Material", outlineMaterial, typeof(Material), false);
+
+        if (GUILayout.Button("Add Outline Material to Prefabs"))
+        {
+            AddOutlineMaterialToPrefabsInPlace();
         }
     }
 
@@ -96,5 +107,63 @@ public class PrefabModifier : EditorWindow
         AssetDatabase.Refresh();
 
         Debug.Log("Prefab modification completed!");
+    }
+
+    private void AddOutlineMaterialToPrefabsInPlace()
+    {
+        if (!Directory.Exists(sourceFolderPath))
+        {
+            Debug.LogError("Source folder path does not exist!");
+            return;
+        }
+
+        if (outlineMaterial == null)
+        {
+            Debug.LogError("Outline material is not assigned!");
+            return;
+        }
+
+        string[] prefabPaths = Directory.GetFiles(sourceFolderPath, "*.prefab", SearchOption.TopDirectoryOnly);
+
+        foreach (string prefabPath in prefabPaths)
+        {
+            string assetPath = prefabPath.Replace(Application.dataPath, "Assets");
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+
+            if (prefab != null)
+            {
+                // Open prefab for editing
+                GameObject prefabInstance = PrefabUtility.LoadPrefabContents(assetPath);
+
+                // Add outline material to all renderers
+                Renderer[] renderers = prefabInstance.GetComponentsInChildren<Renderer>();
+                foreach (Renderer renderer in renderers)
+                {
+                    Material[] materials = renderer.sharedMaterials;
+                    if (!System.Array.Exists(materials, mat => mat == outlineMaterial))
+                    {
+                        Material[] newMaterials = new Material[materials.Length + 1];
+                        materials.CopyTo(newMaterials, 0);
+                        newMaterials[materials.Length] = outlineMaterial;
+                        renderer.sharedMaterials = newMaterials;
+                    }
+                }
+
+                // Save modified prefab
+                PrefabUtility.SaveAsPrefabAsset(prefabInstance, assetPath);
+                PrefabUtility.UnloadPrefabContents(prefabInstance);
+
+                Debug.Log($"Modified prefab saved at: {assetPath}");
+            }
+            else
+            {
+                Debug.LogError($"Failed to load prefab at path: {assetPath}");
+            }
+        }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        Debug.Log("Added outline material to all prefabs in place!");
     }
 }
