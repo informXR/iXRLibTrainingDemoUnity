@@ -13,25 +13,23 @@ public class LevelManager : MonoBehaviour
     public AudioSource failureAudioSource;
     public AudioSource victoryAudioSource;
     public double score;
-    private int totalTargets;
-    private int completedTargets;
-    private float startTime;
+    private int _totalTargets;
+    private int _completedTargets;
     private IIxrService _ixrService;
 
-    void Start()
+    private void Start()
     {
         _ixrService = ServiceLocator.GetService<IIxrService>();
         _ixrService.LogInfo("Content started (LevelManager)");
-        //iXR.EventAssessmentStart("stocking_training_unit_1");
+        _ixrService.EventAssessmentStart("stocking_training_unit_1");
         InitializeGame();
     }
 
     private void InitializeGame()
     {
-        totalTargets = FindObjectsOfType<TargetLocation>().Length;
-        completedTargets = 0;
+        _totalTargets = FindObjectsOfType<TargetLocation>().Length;
+        _completedTargets = 0;
         score = 0;
-        startTime = Time.time; // Initialize start time when the game begins
     }
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
@@ -45,7 +43,7 @@ public class LevelManager : MonoBehaviour
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            //iXR.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
+            _ixrService.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
 
             StartCoroutine(PlayFailSoundThenRestart());
         }
@@ -53,7 +51,7 @@ public class LevelManager : MonoBehaviour
         {
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
 
-            //iXR.EventInteractionComplete($"place_item_{objectId}", "True", "Correct spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
+            _ixrService.EventInteractionComplete($"place_item_{objectId}", "True", "Correct spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
 
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
@@ -85,22 +83,22 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(successAudioSource.clip.length);
 
         // Increment completed targets and check for victory
-        completedTargets++;
+        _completedTargets++;
         CheckForCompletion();
     }
 
     private void CheckForCompletion()
     {
-        if (completedTargets >= totalTargets)
+        if (_completedTargets >= _totalTargets)
         {
             if (score > 70)
             {
-                //iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Pass);
+                _ixrService.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Pass);
                 PlaySuccessSound();
             }
             else
             {
-                //iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Fail);
+                _ixrService.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Fail);
                 PlayFailSound();
             }
         }
@@ -153,10 +151,9 @@ public class LevelManager : MonoBehaviour
     private void InitializeAndReinitializeGame()
     {
         // Initialize game state
-        totalTargets = FindObjectsOfType<TargetLocation>().Length;
-        completedTargets = 0;
+        _totalTargets = FindObjectsOfType<TargetLocation>().Length;
+        _completedTargets = 0;
         score = 0;
-        startTime = Time.time;
 
         try
         {
