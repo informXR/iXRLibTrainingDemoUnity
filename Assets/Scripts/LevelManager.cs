@@ -12,12 +12,14 @@ public class LevelManager : MonoBehaviour
     public double score;
     private int totalTargets;
     private int completedTargets;
+    private IIxrService _ixrService;
 
     private void Start()
     {
+        _ixrService = ServiceLocator.GetService<IIxrService>();
 #if USE_IXRLIB
-        iXR.LogInfo("Content started (LevelManager)");
-        iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
+        _ixrService.LogInfo("Content started (LevelManager)");
+        //iXR.EventAssessmentStart("stocking_training_unit_1", "scriptName=LevelManager");
 #endif
         InitializeGame();
     }
@@ -43,7 +45,7 @@ public class LevelManager : MonoBehaviour
         if (completedTargets >= totalTargets)
         {
 #if USE_IXRLIB
-            iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
+            //iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", "success=true");
 #endif
             PlayVictorySound();
             // You can add more victory actions here, like showing a UI panel, etc.
@@ -160,14 +162,14 @@ public class LevelManager : MonoBehaviour
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
 #if USE_IXRLIB
-            iXR.LogInfo("Game components reinitialized successfully");
+            _ixrService.LogInfo("Game components reinitialized successfully");
 #endif
         }
         catch (Exception e)
         {
             Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
 #if USE_IXRLIB
-            iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
+            _ixrService.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
 #endif
         }
     }

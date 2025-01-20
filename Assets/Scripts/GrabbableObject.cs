@@ -7,6 +7,7 @@ public class GrabbableObject : MonoBehaviour
     public string Id { get; private set; }
 
     private XRGrabInteractable grabInteractable;
+    private IIxrService _ixrService;
 
     private void Awake()
     {
@@ -18,10 +19,15 @@ public class GrabbableObject : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        _ixrService = ServiceLocator.GetService<IIxrService>();
+    }
+
     private void OnGrab(SelectEnterEventArgs args)
     {
 #if USE_IXRLIB
-        iXR.EventInteractionStart(Id, "place_item");
+        //iXR.EventInteractionStart(Id, "place_item");
 #endif
     }
 
