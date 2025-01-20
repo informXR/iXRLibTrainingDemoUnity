@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.XR.Interaction.Toolkit;
+
 [RequireComponent(typeof(Collider))]
 public class TargetLocation : MonoBehaviour
 {
@@ -11,6 +9,7 @@ public class TargetLocation : MonoBehaviour
     // 0.0000004 = 1 degree
     public double rotationError = 0.000004; // 20 Degrees
     public UnityEvent<CompletionData> OnCompleted;
+    private IIxrService _ixrService;
 
     public struct CompletionData
     {
@@ -30,8 +29,10 @@ public class TargetLocation : MonoBehaviour
 
     public void Start()
     {
+        _ixrService = ServiceLocator.GetService<IIxrService>();
         completionData.targetType = this.targetType;
     }
+    
     public void OnTriggerStay(Collider collider)
     {
         // Is Valid Collision
@@ -51,7 +52,7 @@ public class TargetLocation : MonoBehaviour
     public void OnRelease()
     {
         string jsonData = JsonUtility.ToJson(completionData);
-        iXR.LogInfo(jsonData);
+        _ixrService.LogInfo(jsonData);
         Debug.Log(jsonData);
         if (!completionData.validPlacement || OnCompleted == null) return;
         isCompleted = true;

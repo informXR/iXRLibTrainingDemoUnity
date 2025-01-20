@@ -9,6 +9,7 @@ using UnityEditor;
 public class ExitButton : MonoBehaviour
 {
     private XRSimpleInteractable interactable;
+    private IIxrService _ixrService;
 
     private void Awake()
     {
@@ -19,10 +20,15 @@ public class ExitButton : MonoBehaviour
         }
         interactable.selectEntered.AddListener(OnSelect);
     }
+    
+    void Start()
+    {
+        _ixrService = ServiceLocator.GetService<IIxrService>();
+    }
 
     private void OnSelect(SelectEnterEventArgs args)
     {
-        iXR.LogInfo("Exit button pressed");
+        _ixrService.LogInfo("Exit button pressed");
         Debug.Log("Exit button pressed");
         StartCoroutine(ExitGame());
     }
