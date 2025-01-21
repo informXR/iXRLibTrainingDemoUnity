@@ -1,10 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Dropper : MonoBehaviour
 {
-
+    private IIxrService _ixrService;
     private List<GrabbableObjectManager.GrabbableObjectType> queue;
     public float delay = 10;
     public float delayRange = 3;
@@ -16,20 +15,21 @@ public class Dropper : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _ixrService = ServiceLocator.GetService<IIxrService>();
         queue = new List<GrabbableObjectManager.GrabbableObjectType>();
         TargetLocation[] targetLocations = GameObject.FindObjectsOfType<TargetLocation>();
         Debug.Log(targetLocations.Length);
-        iXR.EventLevelStart("1", "scriptName=Dropper");
-        //iXR.Event("level_start", "level=1,scriptName=Dropper");
-        iXR.LogInfo(targetLocations.Length.ToString());
+        _ixrService.EventLevelStart("1", "scriptName=Dropper");
+        _ixrService.LogInfo(targetLocations.Length.ToString());
         foreach (TargetLocation targetLocation in targetLocations)
         {
             queue.Add(targetLocation.targetType);
             Debug.Log(targetLocation.targetType);
         }
 
-        SetDelay();
+        SetDelay(2f);
     }
+
 
     // Update is called once per frame
     void Update()
@@ -48,6 +48,10 @@ public class Dropper : MonoBehaviour
         currentDelay = delay + Random.Range(-1f, 1f) * delayRange;
     }
 
+    public void SetDelay(float fixedDelay)
+    {
+        currentDelay = fixedDelay;
+    }
 
     public void SpawnRandom()
     {

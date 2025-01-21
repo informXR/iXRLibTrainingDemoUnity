@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90064ff7e10a4fe4b6ccb224c9cf8250, type: 3}
+  m_Name: informXR
+  m_EditorClassIdentifier: 
+  appID: change-this-4your-n33d-e614ef79315b
+  orgID: aa
+  authSecret: aa
+  headsetTracking: 1
+  trackingUpdatesPerMinute: 4
+  restUrl: http://192.168.1.10:8000/v1/
+  sendRetriesOnFailure: 3
+  sendRetryIntervalSeconds: 3
+  sendNextBatchWaitSeconds: 30
+  stragglerTimeoutSeconds: 15
+  eventsPerSendAttempt: 4
+  logsPerSendAttempt: 4
+  telemetryEntriesPerSendAttempt: 4
+  storageEntriesPerSendAttempt: 4
+  pruneSentItemsOlderThanHours: 12
+  maximumCachedItems: 1024
+  retainLocalAfterSent: 0
+  debugDisplay: 1
+  debugDisplaySide: 0
