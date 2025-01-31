@@ -8,32 +8,26 @@ using UnityEditor;
 
 public class ExitButton : MonoBehaviour
 {
-    private XRSimpleInteractable interactable;
-    private IIxrService _ixrService;
+    private XRSimpleInteractable _interactable;
 
-    private void Awake()
+    private void Start()
     {
-        interactable = GetComponent<XRSimpleInteractable>();
-        if (interactable == null)
+        _interactable = GetComponent<XRSimpleInteractable>();
+        if (_interactable == null)
         {
-            interactable = gameObject.AddComponent<XRSimpleInteractable>();
+            _interactable = gameObject.AddComponent<XRSimpleInteractable>();
         }
-        interactable.selectEntered.AddListener(OnSelect);
-    }
-    
-    void Start()
-    {
-        _ixrService = ServiceLocator.GetService<IIxrService>();
+        _interactable.selectEntered.AddListener(OnSelect);
     }
 
     private void OnSelect(SelectEnterEventArgs args)
     {
-        _ixrService.LogInfo("Exit button pressed");
-        Debug.Log("Exit button pressed");
+        iXR.LogWarn("Exit button pressed");
+        Debug.LogWarning("Exit button pressed");
         StartCoroutine(ExitGame());
     }
 
-    private IEnumerator ExitGame()
+    private static IEnumerator ExitGame()
     {
         // Perform any cleanup or saving operations here
         // SaveGameState();

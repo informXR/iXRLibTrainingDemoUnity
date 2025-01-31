@@ -9,7 +9,6 @@ public class TargetLocation : MonoBehaviour
     // 0.0000004 = 1 degree
     public double rotationError = 0.000004; // 20 Degrees
     public UnityEvent<CompletionData> OnCompleted;
-    private IIxrService _ixrService;
 
     public struct CompletionData
     {
@@ -29,7 +28,6 @@ public class TargetLocation : MonoBehaviour
 
     public void Start()
     {
-        _ixrService = ServiceLocator.GetService<IIxrService>();
         completionData.targetType = this.targetType;
     }
     
@@ -52,7 +50,7 @@ public class TargetLocation : MonoBehaviour
     public void OnRelease()
     {
         string jsonData = JsonUtility.ToJson(completionData);
-        _ixrService.LogInfo(jsonData);
+        iXR.LogInfo(jsonData);
         Debug.Log(jsonData);
         if (!completionData.validPlacement || OnCompleted == null) return;
         isCompleted = true;

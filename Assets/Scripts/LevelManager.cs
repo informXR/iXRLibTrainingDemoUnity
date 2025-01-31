@@ -15,13 +15,11 @@ public class LevelManager : MonoBehaviour
     public double score;
     private int _totalTargets;
     private int _completedTargets;
-    private IIxrService _ixrService;
 
     private void Start()
     {
-        _ixrService = ServiceLocator.GetService<IIxrService>();
-        _ixrService.LogInfo("Content started (LevelManager)");
-        _ixrService.EventAssessmentStart("stocking_training_unit_1");
+        iXR.LogInfo("Content started (LevelManager)");
+        iXR.EventAssessmentStart("stocking_training_unit_1");
         InitializeGame();
     }
 
@@ -34,7 +32,7 @@ public class LevelManager : MonoBehaviour
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
-        _ixrService.LogInfo("Placement Attempted");
+        iXR.LogInfo("Placement Attempted");
         Debug.Log("iXRLib - Placement Attempted");
 
         if (completionData.usedType != completionData.targetType)
@@ -43,7 +41,7 @@ public class LevelManager : MonoBehaviour
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            _ixrService.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
+            iXR.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
 
             StartCoroutine(PlayFailSoundThenRestart());
         }
@@ -51,7 +49,7 @@ public class LevelManager : MonoBehaviour
         {
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
 
-            _ixrService.EventInteractionComplete($"place_item_{objectId}", "True", "Correct spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
+            iXR.EventInteractionComplete($"place_item_{objectId}", "True", "Correct spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
 
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
@@ -93,12 +91,12 @@ public class LevelManager : MonoBehaviour
         {
             if (score > 70)
             {
-                _ixrService.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Pass);
+                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Pass);
                 PlaySuccessSound();
             }
             else
             {
-                _ixrService.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Fail);
+                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Fail);
                 PlayFailSound();
             }
         }
@@ -225,12 +223,12 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
-            _ixrService.LogInfo("Game components reinitialized successfully");
+            iXR.LogInfo("Game components reinitialized successfully");
         }
         catch (Exception e)
         {
             Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
-            _ixrService.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
+            iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
         }
     }
 }
