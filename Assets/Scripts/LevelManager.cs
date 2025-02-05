@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.SceneManagement;
-using UnityEngine.Android;
+using Random = System.Random;
 
 public class LevelManager : MonoBehaviour
 {
@@ -15,12 +13,31 @@ public class LevelManager : MonoBehaviour
     public double score;
     private int _totalTargets;
     private int _completedTargets;
+    private static readonly Random random = new();
 
     private void Start()
     {
         iXR.LogInfo("Content started (LevelManager)");
         iXR.EventAssessmentStart("stocking_training_unit_1");
         InitializeGame();
+        InvokeRepeating(nameof(CheckRunTime), 0, 300); // Call every 5 minutes
+        InvokeRepeating(nameof(TestCheck), 0, 30); // Call every 30 seconds
+        if (random.NextDouble() < 0.5)
+        {
+            iXR.LogError("Bad Life Direction, Description: The job market is bad, but wow you really couldn't " +
+                         "find a better job than a shelf stocker in the void? At least rent must be cheap.");
+        }
+    }
+
+    private void CheckRunTime()
+    {
+        iXR.LogCritical("iXRLib - Spending way too much time sorting fruit! This is not that hard a task!");
+    }
+
+    private void TestCheck()
+    {
+        iXR.LogError("iXRLib - Bad Luck, Description: We rolled the dice for fun and found you lost! " +
+                     "This is mostly just for testing purposes.");
     }
 
     private void InitializeGame()
@@ -42,7 +59,7 @@ public class LevelManager : MonoBehaviour
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
             iXR.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
-
+            iXR.LogCritical($"Improper placement of {completionData.usedType}");
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
