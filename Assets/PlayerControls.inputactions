@@ -2,65 +2,6 @@
     "name": "PlayerControls",
     "maps": [
         {
-            "name": "VRControls",
-            "id": "5c138863-ad5f-49d3-9abc-17ef5f515a63",
-            "actions": [
-                {
-                    "name": "Move",
-                    "type": "Value",
-                    "id": "f4f6ac90-5f28-4318-b9f9-323e0c6b1489",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Turn",
-                    "type": "Button",
-                    "id": "f26280c6-5357-4b22-8b50-50d366b3f5dc",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "4de6d7ae-ba59-4e0a-b3dc-c7a25817559a",
-                    "path": "<XRController>{LeftHand}/{Point}",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "da0a8953-c9e5-4af5-be22-53d1e0bfab76",
-                    "path": "<XRController>{RightHand}/{Point}",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "af0c654b-efec-4393-a27a-e795d861b2f0",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Turn",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
             "name": "DesktopControls",
             "id": "bfc44f90-7de0-4817-b475-5b38fd1d197e",
             "actions": [

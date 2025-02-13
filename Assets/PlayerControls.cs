@@ -24,65 +24,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     ""name"": ""PlayerControls"",
     ""maps"": [
         {
-            ""name"": ""VRControls"",
-            ""id"": ""5c138863-ad5f-49d3-9abc-17ef5f515a63"",
-            ""actions"": [
-                {
-                    ""name"": ""Move"",
-                    ""type"": ""Value"",
-                    ""id"": ""f4f6ac90-5f28-4318-b9f9-323e0c6b1489"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Turn"",
-                    ""type"": ""Button"",
-                    ""id"": ""f26280c6-5357-4b22-8b50-50d366b3f5dc"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""4de6d7ae-ba59-4e0a-b3dc-c7a25817559a"",
-                    ""path"": ""<XRController>{LeftHand}/{Point}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""da0a8953-c9e5-4af5-be22-53d1e0bfab76"",
-                    ""path"": ""<XRController>{RightHand}/{Point}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""af0c654b-efec-4393-a27a-e795d861b2f0"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Turn"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
             ""name"": ""DesktopControls"",
             ""id"": ""bfc44f90-7de0-4817-b475-5b38fd1d197e"",
             ""actions"": [
@@ -221,10 +162,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": []
 }");
-        // VRControls
-        m_VRControls = asset.FindActionMap("VRControls", throwIfNotFound: true);
-        m_VRControls_Move = m_VRControls.FindAction("Move", throwIfNotFound: true);
-        m_VRControls_Turn = m_VRControls.FindAction("Turn", throwIfNotFound: true);
         // DesktopControls
         m_DesktopControls = asset.FindActionMap("DesktopControls", throwIfNotFound: true);
         m_DesktopControls_Move = m_DesktopControls.FindAction("Move", throwIfNotFound: true);
@@ -287,60 +224,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // VRControls
-    private readonly InputActionMap m_VRControls;
-    private List<IVRControlsActions> m_VRControlsActionsCallbackInterfaces = new List<IVRControlsActions>();
-    private readonly InputAction m_VRControls_Move;
-    private readonly InputAction m_VRControls_Turn;
-    public struct VRControlsActions
-    {
-        private @PlayerControls m_Wrapper;
-        public VRControlsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_VRControls_Move;
-        public InputAction @Turn => m_Wrapper.m_VRControls_Turn;
-        public InputActionMap Get() { return m_Wrapper.m_VRControls; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(VRControlsActions set) { return set.Get(); }
-        public void AddCallbacks(IVRControlsActions instance)
-        {
-            if (instance == null || m_Wrapper.m_VRControlsActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_VRControlsActionsCallbackInterfaces.Add(instance);
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
-            @Turn.started += instance.OnTurn;
-            @Turn.performed += instance.OnTurn;
-            @Turn.canceled += instance.OnTurn;
-        }
-
-        private void UnregisterCallbacks(IVRControlsActions instance)
-        {
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
-            @Turn.started -= instance.OnTurn;
-            @Turn.performed -= instance.OnTurn;
-            @Turn.canceled -= instance.OnTurn;
-        }
-
-        public void RemoveCallbacks(IVRControlsActions instance)
-        {
-            if (m_Wrapper.m_VRControlsActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IVRControlsActions instance)
-        {
-            foreach (var item in m_Wrapper.m_VRControlsActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_VRControlsActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public VRControlsActions @VRControls => new VRControlsActions(this);
-
     // DesktopControls
     private readonly InputActionMap m_DesktopControls;
     private List<IDesktopControlsActions> m_DesktopControlsActionsCallbackInterfaces = new List<IDesktopControlsActions>();
@@ -394,11 +277,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public DesktopControlsActions @DesktopControls => new DesktopControlsActions(this);
-    public interface IVRControlsActions
-    {
-        void OnMove(InputAction.CallbackContext context);
-        void OnTurn(InputAction.CallbackContext context);
-    }
     public interface IDesktopControlsActions
     {
         void OnMove(InputAction.CallbackContext context);
