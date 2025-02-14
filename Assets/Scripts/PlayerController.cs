@@ -73,14 +73,17 @@ public class PlayerController : MonoBehaviour
     {
         // Example movement logic:
         Vector3 moveDirection = new Vector3(_moveInput.x, 0, _moveInput.y);
-        transform.Translate(moveDirection * Time.deltaTime * 5f, Space.World);
+        transform.Translate(moveDirection * Time.deltaTime * 5, Space.Self);
 
-        // Example look logic:
-        float lookX = _lookInput.x * Time.deltaTime * 3;
-        transform.Rotate(0, lookX, 0);
+        if (Mouse.current.rightButton.isPressed)
+        {
+            // Example look logic:
+            float lookX = _lookInput.x * Time.deltaTime * 5;
+            transform.Rotate(0, lookX, 0);
 
-        // For vertical look, consider rotating the camera child:
-         float lookY = _lookInput.y * Time.deltaTime * 3;
-         transform.Rotate(-lookY, 0, 0);
+            // For vertical look, consider rotating the camera child:
+            float lookY = _lookInput.y * Time.deltaTime * 5;
+            transform.Rotate(-lookY, 0, 0);
+        }
     }
 }
