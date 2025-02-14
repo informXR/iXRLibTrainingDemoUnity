@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject xrRig;           // Assign your XR Rig object here
-    public GameObject desktopCamera;   // Assign your Desktop Camera Rig here
+    public GameObject VRRig;           // Assign your XR Rig object here
+    public GameObject DesktopRig;   // Assign your Desktop Camera Rig here
     
     private PlayerControls _controls;   // Your Input Action asset
 
@@ -36,20 +37,20 @@ public class PlayerController : MonoBehaviour
 
     private void ActivateVRMode()
     {
-        if (xrRig != null)
-            xrRig.SetActive(true);
-        if (desktopCamera != null)
-            desktopCamera.SetActive(false);
+        if (VRRig != null)
+            VRRig.SetActive(true);
+        if (DesktopRig != null)
+            DesktopRig.SetActive(false);
         
         _controls.DesktopControls.Disable();
     }
 
     private void ActivateDesktopMode()
     {
-        if (xrRig != null)
-            xrRig.SetActive(false);
-        if (desktopCamera != null)
-            desktopCamera.SetActive(true);
+        if (VRRig != null)
+            VRRig.SetActive(false);
+        if (DesktopRig != null)
+            DesktopRig.SetActive(true);
 
         // Enable desktop action map
         _controls.DesktopControls.Enable();
@@ -75,11 +76,11 @@ public class PlayerController : MonoBehaviour
         transform.Translate(moveDirection * Time.deltaTime * 5f, Space.World);
 
         // Example look logic:
-        float lookX = _lookInput.x * Time.deltaTime * 2f;
+        float lookX = _lookInput.x * Time.deltaTime * 3;
         transform.Rotate(0, lookX, 0);
 
         // For vertical look, consider rotating the camera child:
-        // float lookY = lookInput.y * Time.deltaTime * 2f;
-        // Camera.main.transform.Rotate(-lookY, 0, 0);
+         float lookY = _lookInput.y * Time.deltaTime * 3;
+         transform.Rotate(-lookY, 0, 0);
     }
 }

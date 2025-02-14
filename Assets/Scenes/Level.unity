@@ -755,8 +755,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6356dd5d31524b7da1dfc00628d9e740, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xrRig: {fileID: 1837063234}
-  desktopCamera: {fileID: 82277586}
+  VRRig: {fileID: 1837063234}
+  DesktopRig: {fileID: 82277586}
+  grabPoint: {fileID: 0}
+  maxGrabDistance: 3
+  grabbableLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  DesktopCamera: {fileID: 491823847}
 --- !u!1001 &188012238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5273,8 +5279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612d3f4658dd0904ca6401fc29d59c75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentPosition: {x: 0, y: 0, z: 0}
-  _currentRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!54 &1133319919
 Rigidbody:
   m_ObjectHideFlags: 0
