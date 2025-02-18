@@ -144,5 +144,13 @@ public class PlayerController : MonoBehaviour
             float lookY = _lookInput.y * Time.deltaTime * 5;
             transform.Rotate(-lookY, 0, 0);
         }
+        else
+        {
+            // Get the current Euler angles.
+            Vector3 currentEuler = transform.rotation.eulerAngles;
+
+            // Keep the current pitch (x) and yaw (y), but reset the roll (z) to zero.
+            transform.rotation = Quaternion.Euler(currentEuler.x, currentEuler.y, 0);
+        }
     }
 }
