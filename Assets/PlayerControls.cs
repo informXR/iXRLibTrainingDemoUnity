@@ -44,6 +44,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""182ccd83-090a-4eae-93ce-911c7c797f51"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -156,6 +165,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ef73150-1bb7-4086-a29a-e67bcaa3f997"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -166,6 +186,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_DesktopControls = asset.FindActionMap("DesktopControls", throwIfNotFound: true);
         m_DesktopControls_Move = m_DesktopControls.FindAction("Move", throwIfNotFound: true);
         m_DesktopControls_Look = m_DesktopControls.FindAction("Look", throwIfNotFound: true);
+        m_DesktopControls_Click = m_DesktopControls.FindAction("Click", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -229,12 +250,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IDesktopControlsActions> m_DesktopControlsActionsCallbackInterfaces = new List<IDesktopControlsActions>();
     private readonly InputAction m_DesktopControls_Move;
     private readonly InputAction m_DesktopControls_Look;
+    private readonly InputAction m_DesktopControls_Click;
     public struct DesktopControlsActions
     {
         private @PlayerControls m_Wrapper;
         public DesktopControlsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_DesktopControls_Move;
         public InputAction @Look => m_Wrapper.m_DesktopControls_Look;
+        public InputAction @Click => m_Wrapper.m_DesktopControls_Click;
         public InputActionMap Get() { return m_Wrapper.m_DesktopControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -250,6 +273,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
         }
 
         private void UnregisterCallbacks(IDesktopControlsActions instance)
@@ -260,6 +286,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
         }
 
         public void RemoveCallbacks(IDesktopControlsActions instance)
@@ -281,5 +310,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
 }

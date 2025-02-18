@@ -4,13 +4,21 @@ using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject VRRig;           // Assign your XR Rig object here
+    public GameObject VRRig;        // Assign your XR Rig object here
     public GameObject DesktopRig;   // Assign your Desktop Camera Rig here
     
     private PlayerControls _controls;   // Your Input Action asset
 
     private Vector2 _moveInput;
     private Vector2 _lookInput;
+    
+    public Camera desktopCamera;
+    private GameObject _grabbedObject = null;
+    private Vector3 _grabOffset = Vector3.zero;
+    private float _distance;
+
+    // Assign the layer(s) that contain grabbable objects
+    public LayerMask grabbableLayer;
 
     private void Awake()
     {
@@ -23,7 +31,13 @@ public class PlayerController : MonoBehaviour
 
         _controls.DesktopControls.Look.performed += ctx => _lookInput = ctx.ReadValue<Vector2>();
         _controls.DesktopControls.Look.canceled += ctx => _lookInput = Vector2.zero;
+        
+        _controls.DesktopControls.Click.performed += OnMouseClick;
+        _controls.DesktopControls.Click.canceled += OnMouseRelease;
     }
+    
+    private void OnEnable() => _controls.DesktopControls.Enable();
+    private void OnDisable() => _controls.DesktopControls.Disable();
 
     private void Start()
     {
@@ -56,17 +70,62 @@ public class PlayerController : MonoBehaviour
         _controls.DesktopControls.Enable();
     }
 
-    private void OnDisable()
-    {
-        _controls.Disable();
-    }
-
     private void Update()
     {
         // For desktop mode, update movement and look
         #if UNITY_WEBGL
             HandleDesktopMovement();
         #endif
+        
+        if (_grabbedObject != null)
+        {
+            Vector2 mousePos = Mouse.current.position.ReadValue();
+
+            // Calculate the distance from the camera to the grabbed object
+            if (_distance == 0)
+            {
+                _distance = Vector3.Distance(desktopCamera.transform.position, _grabbedObject.transform.position) - 0.5f;
+            }
+
+            // Convert the mouse position to a world point using the calculated distance (z coordinate)
+            Vector3 screenPoint = new Vector3(mousePos.x, mousePos.y, _distance);
+            Vector3 worldPos = desktopCamera.ScreenToWorldPoint(screenPoint);
+            
+            // Apply the previously calculated offset so the object moves exactly from where it was grabbed
+            _grabbedObject.transform.position = worldPos + _grabOffset;
+        }
+    }
+    
+    // Called when the left mouse button is pressed.
+    private void OnMouseClick(InputAction.CallbackContext context)
+    {
+        if (_grabbedObject != null) return;
+        
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Ray ray = desktopCamera.ScreenPointToRay(mousePos);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, grabbableLayer))
+        {
+            Debug.Log("Hit: " + hit.collider.gameObject.name);
+            _grabbedObject = hit.collider.gameObject;
+
+            // Calculate offset between object's pivot and the hit point
+            _grabOffset = _grabbedObject.transform.position - hit.point;
+        }
+        else
+        {
+            Debug.Log("No grabbable object hit.");
+        }
+    }
+
+    // Called when the left mouse button is released.
+    private void OnMouseRelease(InputAction.CallbackContext context)
+    {
+        if (_grabbedObject == null) return;
+        
+        _grabbedObject = null;
+        _grabOffset = Vector3.zero;
+        _distance = 0;
     }
 
     private void HandleDesktopMovement()

@@ -757,12 +757,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VRRig: {fileID: 1837063234}
   DesktopRig: {fileID: 82277586}
-  grabPoint: {fileID: 0}
-  maxGrabDistance: 3
-  grabbableLayerMask:
+  desktopCamera: {fileID: 491823847}
+  grabbableLayer:
     serializedVersion: 2
-    m_Bits: 0
-  DesktopCamera: {fileID: 491823847}
+    m_Bits: 1
 --- !u!1001 &188012238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5239,6 +5237,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5297be54d10699e42a4be6e545193ded, type: 3}
       propertyPath: m_Name
       value: AppleJack
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5297be54d10699e42a4be6e545193ded, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
