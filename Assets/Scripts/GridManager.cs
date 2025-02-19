@@ -5,7 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class GridManager : MonoBehaviour
 {
-    public GameObject[] objectPrefabs; 
+    public GameObject objectPrefab; 
     public GameObject emptySlotPrefab; 
     public Vector2 gridSpacing = new Vector2(2, 2); 
     public int rows = 5;      public int columns = 5;
@@ -61,10 +61,7 @@ public class GridManager : MonoBehaviour
 
     private void SpawnObjectAtLocalPosition(Vector3 localPosition)
     {
-        if (objectPrefabs.Length == 0) return;
-
-        int randomIndex = Random.Range(0, objectPrefabs.Length);
-        GameObject obj = Instantiate(objectPrefabs[randomIndex], transform);
+        GameObject obj = Instantiate(objectPrefab, transform);
         obj.transform.localPosition = localPosition;
         Destroy(obj.GetComponent<XRGrabInteractable>());
         obj.transform.localRotation = Quaternion.Euler(InitialRotation);
