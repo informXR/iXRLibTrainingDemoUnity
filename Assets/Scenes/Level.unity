@@ -248,6 +248,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: avocado
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7dae209b76ce38e47846119fc6cd2e7b, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -760,7 +764,7 @@ MonoBehaviour:
   desktopCamera: {fileID: 491823847}
   grabbableLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 8
 --- !u!1001 &188012238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4187,6 +4191,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Target
       objectReference: {fileID: 0}
+    - target: {fileID: 3782746831535047117, guid: 8a127ccea23432443a3d8d22c02e41d6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3979287567325244880, guid: 8a127ccea23432443a3d8d22c02e41d6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.0469999
@@ -5240,7 +5248,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5297be54d10699e42a4be6e545193ded, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

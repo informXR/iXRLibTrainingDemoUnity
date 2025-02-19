@@ -137,11 +137,11 @@ public class PlayerController : MonoBehaviour
         if (Mouse.current.rightButton.isPressed)
         {
             // Example look logic:
-            float lookX = _lookInput.x * Time.deltaTime * 5;
+            float lookX = _lookInput.x * Time.deltaTime * 9;
             transform.Rotate(0, lookX, 0);
 
             // For vertical look, consider rotating the camera child:
-            float lookY = _lookInput.y * Time.deltaTime * 5;
+            float lookY = _lookInput.y * Time.deltaTime * 9;
             transform.Rotate(-lookY, 0, 0);
         }
         else
