@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using Random = System.Random;
@@ -17,26 +18,26 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        iXR.LogInfo("Content started (LevelManager)");
-        iXR.EventAssessmentStart("stocking_training_unit_1");
+        Abxr.LogInfo("Content started (LevelManager)");
+        Abxr.EventAssessmentStart("stocking_training_unit_1");
         InitializeGame();
         InvokeRepeating(nameof(CheckRunTime), 0, 300); // Call every 5 minutes
         InvokeRepeating(nameof(TestCheck), 0, 30); // Call every 30 seconds
         if (random.NextDouble() < 0.5)
         {
-            iXR.LogError("Bad Life Direction, Description: The job market is bad, but wow you really couldn't " +
+            Abxr.LogError("Bad Life Direction, Description: The job market is bad, but wow you really couldn't " +
                          "find a better job than a shelf stocker in the void? At least rent must be cheap.");
         }
     }
 
     private void CheckRunTime()
     {
-        iXR.LogCritical("iXRLib - Spending way too much time sorting fruit! This is not that hard a task!");
+        Abxr.LogCritical("iXRLib - Spending way too much time sorting fruit! This is not that hard a task!");
     }
 
     private void TestCheck()
     {
-        iXR.LogError("iXRLib - Bad Luck, Description: We rolled the dice for fun and found you lost! " +
+        Abxr.LogError("iXRLib - Bad Luck, Description: We rolled the dice for fun and found you lost! " +
                      "This is mostly just for testing purposes.");
     }
 
@@ -49,7 +50,7 @@ public class LevelManager : MonoBehaviour
 
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
-        iXR.LogInfo("Placement Attempted");
+        Abxr.LogInfo("Placement Attempted");
         Debug.Log("iXRLib - Placement Attempted");
 
         if (completionData.usedType != completionData.targetType)
@@ -58,15 +59,25 @@ public class LevelManager : MonoBehaviour
 
             completionData.usedTarget.GetComponent<MeshFilter>().sharedMesh = completionData.usedObject.GetComponent<MeshFilter>().sharedMesh;
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
-            iXR.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
-            iXR.LogCritical($"Improper placement of {completionData.usedType}");
+            Abxr.EventInteractionComplete($"place_item_{objectId}", "False", "Wrong spot", Abxr.InteractionType.Bool,
+                new Dictionary<string, string>
+                {
+                    ["placed_fruit"] = completionData.usedType.ToString(),
+                    ["intended_fruit"] = completionData.targetType.ToString()
+                });
+            Abxr.LogCritical($"Improper placement of {completionData.usedType}");
             StartCoroutine(PlayFailSoundThenRestart());
         }
         else
         {
             string objectId = completionData.usedObject.GetComponent<GrabbableObject>().Id; // Change 'id' to 'Id'
 
-            iXR.EventInteractionComplete($"place_item_{objectId}", "True", "Correct spot", iXR.InteractionType.Bool, $"placed_fruit={completionData.usedType},intended_fruit={completionData.targetType}");
+            Abxr.EventInteractionComplete($"place_item_{objectId}", "True", "Correct spot", Abxr.InteractionType.Bool,
+                new Dictionary<string, string>
+                {
+                    ["placed_fruit"] = completionData.usedType.ToString(),
+                    ["intended_fruit"] = completionData.targetType.ToString()
+                });
 
             StartCoroutine(PlaySuccessSoundAndCheckVictory());
         }
@@ -108,12 +119,12 @@ public class LevelManager : MonoBehaviour
         {
             if (score > 70)
             {
-                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Pass);
+                Abxr.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: Abxr.ResultOptions.Pass);
                 PlaySuccessSound();
             }
             else
             {
-                iXR.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: iXR.ResultOptions.Fail);
+                Abxr.EventAssessmentComplete("stocking_training_unit_1", $"{score}", result: Abxr.ResultOptions.Fail);
                 PlayFailSound();
             }
         }
@@ -240,12 +251,12 @@ public class LevelManager : MonoBehaviour
 
             // Log the reinitialization
             Debug.Log("Game components reinitialized successfully");
-            iXR.LogInfo("Game components reinitialized successfully");
+            Abxr.LogInfo("Game components reinitialized successfully");
         }
         catch (Exception e)
         {
             Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
-            iXR.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
+            Abxr.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
         }
     }
 }
