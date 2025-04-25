@@ -32,12 +32,12 @@ public class LevelManager : MonoBehaviour
 
     private void CheckRunTime()
     {
-        Abxr.LogCritical("iXRLib - Spending way too much time sorting fruit! This is not that hard a task!");
+        Abxr.LogCritical("AbxrLib - Spending way too much time sorting fruit! This is not that hard a task!");
     }
 
     private void TestCheck()
     {
-        Abxr.LogError("iXRLib - Bad Luck, Description: We rolled the dice for fun and found you lost! " +
+        Abxr.LogError("AbxrLib - Bad Luck, Description: We rolled the dice for fun and found you lost! " +
                      "This is mostly just for testing purposes.");
     }
 
@@ -51,7 +51,7 @@ public class LevelManager : MonoBehaviour
     public void CompleteTask(TargetLocation.CompletionData completionData)
     {
         Abxr.LogInfo("Placement Attempted");
-        Debug.Log("iXRLib - Placement Attempted");
+        Debug.Log("AbxrLib - Placement Attempted");
 
         if (completionData.usedType != completionData.targetType)
         {
