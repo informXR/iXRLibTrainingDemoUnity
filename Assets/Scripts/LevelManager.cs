@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit;
 using Random = System.Random;
 
@@ -169,94 +169,8 @@ public class LevelManager : MonoBehaviour
         RestartExperience();
     }
 
-    private void RestartExperience()
+    private static void RestartExperience()
     {
-        InitializeAndReinitializeGame();
-    }
-
-    private void InitializeAndReinitializeGame()
-    {
-        // Initialize game state
-        _totalTargets = FindObjectsOfType<TargetLocation>().Length;
-        _completedTargets = 0;
-        score = 0;
-
-        try
-        {
-            // Reset the Dropper
-            if (dropper != null)
-            {
-                dropper.ResetDropper();
-                TargetLocation[] targetLocations = FindObjectsOfType<TargetLocation>();
-                foreach (TargetLocation targetLocation in targetLocations)
-                {
-                    dropper.Add(targetLocation.targetType);
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Dropper not found during reinitialization");
-            }
-
-            // Reinitialize GrabbableObjectManager
-            GrabbableObjectManager.getInstance().Start();
-
-            // Reset all TargetLocations
-            TargetLocation[] allTargetLocations = FindObjectsOfType<TargetLocation>();
-            foreach (TargetLocation targetLocation in allTargetLocations)
-            {
-                targetLocation.ResetState();
-            }
-
-            // Re-enable all XR Interactors and Interactables
-            XRBaseInteractor[] interactors = FindObjectsOfType<XRBaseInteractor>();
-            foreach (XRBaseInteractor interactor in interactors)
-            {
-                interactor.enabled = false;
-                interactor.enabled = true;
-            }
-
-            XRBaseInteractable[] interactables = FindObjectsOfType<XRBaseInteractable>();
-            foreach (XRBaseInteractable interactable in interactables)
-            {
-                interactable.enabled = false;
-                interactable.enabled = true;
-            }
-
-            // Reset the player's position if necessary
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                player.transform.position = Vector3.zero; // Or your desired starting position
-                player.transform.rotation = Quaternion.identity;
-            }
-
-            // Reinitialize audio sources
-            if (successAudioSource != null) successAudioSource.Stop();
-            if (failureAudioSource != null) failureAudioSource.Stop();
-            if (victoryAudioSource != null) victoryAudioSource.Stop();
-
-            // Clear any ongoing coroutines
-            StopAllCoroutines();
-
-            // Ensure all necessary GameObjects are active
-            GameObject[] allObjects = FindObjectsOfType<GameObject>();
-            foreach (GameObject obj in allObjects)
-            {
-                if (obj.CompareTag("ResetOnPause"))
-                {
-                    obj.SetActive(true);
-                }
-            }
-
-            // Log the reinitialization
-            Debug.Log("Game components reinitialized successfully");
-            Abxr.LogInfo("Game components reinitialized successfully");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("Error during InitializeAndReinitializeGame: " + e.Message);
-            Abxr.LogInfo("Error during InitializeAndReinitializeGame: " + e.Message);
-        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
