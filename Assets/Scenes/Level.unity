@@ -686,6 +686,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 181380311}
+  - component: {fileID: 181380312}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -709,6 +710,31 @@ Transform:
   - {fileID: 1837063235}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &181380312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181380310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e4bafcf961074509ad3cd1590dede98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableDesktopControls: 1
+  moveSpeed: 2
+  turnSpeed: 100
+  mouseSensitivity: 0.5
+  mouseTurnSensitivity: 0.5
+  interactionDistance: 20
+  interactableLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  showDebugRay: 1
+  debugRayColor: {r: 1, g: 0, b: 0, a: 1}
+  grabDistance: 2
+  throwForce: 5
 --- !u!1001 &188012238
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7730,8 +7756,6 @@ GameObject:
   - component: {fileID: 1579078797}
   - component: {fileID: 1579078796}
   - component: {fileID: 1579078801}
-  - component: {fileID: 1579078803}
-  - component: {fileID: 1579078802}
   m_Layer: 0
   m_Name: ExitCube
   m_TagString: Untagged
@@ -7955,43 +7979,6 @@ MonoBehaviour:
   m_OnDeactivate:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1579078802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1579078794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eac42738795f4868acc98658c7db97c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionDistance: 20
-  interactableLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  showDebugRay: 1
-  debugRayColor: {r: 1, g: 0, b: 0, a: 1}
-  grabDistance: 2
-  throwForce: 5
---- !u!114 &1579078803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1579078794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b2d487fd657d460fa0fcbeaa03b9f4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableKeyboardMovement: 1
-  moveSpeed: 2
-  turnSpeed: 100
-  mouseSensitivity: 0.5
-  mouseTurnSensitivity: 0.5
 --- !u!1001 &1601644770
 PrefabInstance:
   m_ObjectHideFlags: 0
