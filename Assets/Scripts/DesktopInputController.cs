@@ -119,6 +119,16 @@ public class DesktopInputController : MonoBehaviour
         }
         
         setupComplete = true;
+        
+        // Initialize currentPitch to match the camera's current rotation
+        if (xrCamera != null)
+        {
+            currentPitch = xrCamera.transform.localEulerAngles.x;
+            // Normalize the pitch to be within our expected range
+            if (currentPitch > 180f)
+                currentPitch -= 360f;
+        }
+        
         Debug.Log("DesktopInputController: Setup complete - Desktop controls enabled");
     }
     
@@ -157,6 +167,9 @@ public class DesktopInputController : MonoBehaviour
         HandleMouseInteraction();
         ApplyMovement();
         UpdateGrabbedObject();
+        
+        // Ensure camera pitch is maintained even when not in mouse look mode
+        MaintainCameraPitch();
     }
     
     private void HandleKeyboardInput()
@@ -196,6 +209,13 @@ public class DesktopInputController : MonoBehaviour
             isMouseLookActive = !isMouseLookActive;
             Cursor.lockState = isMouseLookActive ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !isMouseLookActive;
+            
+            // When disabling mouse look, ensure we preserve the current pitch
+            if (!isMouseLookActive && xrCamera != null)
+            {
+                // Preserve the current pitch when exiting mouse look mode
+                xrCamera.transform.localRotation = Quaternion.Euler(currentPitch, xrCamera.transform.localEulerAngles.y, 0f);
+            }
         }
         
         if (isMouseLookActive)
@@ -220,8 +240,8 @@ public class DesktopInputController : MonoBehaviour
     
     private void HandleMouseInteraction()
     {
-        // Only handle mouse interaction when not in mouse look mode
-        if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame)
+        // Middle mouse button for grab/drop - only when not in mouse look mode
+        if (mouse != null && mouse.middleButton.wasPressedThisFrame && !isMouseLookActive)
         {
             if (isGrabbing)
             {
@@ -234,7 +254,7 @@ public class DesktopInputController : MonoBehaviour
         }
         
         // Right click to throw (if holding an object) - only when not in mouse look mode
-        if (mouse.rightButton.wasPressedThisFrame && isGrabbing)
+        if (mouse.rightButton.wasPressedThisFrame && isGrabbing && !isMouseLookActive)
         {
             ThrowObject();
         }
@@ -354,6 +374,23 @@ public class DesktopInputController : MonoBehaviour
         isGrabbing = false;
     }
     
+    private void MaintainCameraPitch()
+    {
+        // Ensure the camera maintains its pitch even when not in mouse look mode
+        if (xrCamera != null && !isMouseLookActive)
+        {
+            // Only update if the current camera pitch doesn't match our stored pitch
+            float currentCameraPitch = xrCamera.transform.localEulerAngles.x;
+            if (currentCameraPitch > 180f)
+                currentCameraPitch -= 360f;
+            
+            if (Mathf.Abs(currentCameraPitch - currentPitch) > 0.1f)
+            {
+                xrCamera.transform.localRotation = Quaternion.Euler(currentPitch, xrCamera.transform.localEulerAngles.y, 0f);
+            }
+        }
+    }
+    
     private void ApplyMovement()
     {
         if (characterController == null) return;
@@ -414,8 +451,8 @@ public class DesktopInputController : MonoBehaviour
         
         // Interaction controls
         GUILayout.Label("Interaction:", GUI.skin.box);
-        GUILayout.Label("Spacebar: Grab/Drop Objects");
-        GUILayout.Label("Spacebar: Activate Buttons (Exit Cube)");
+        GUILayout.Label("Middle Click: Grab/Drop Objects");
+        GUILayout.Label("Middle Click: Activate Buttons (Exit Cube)");
         GUILayout.Label("Right Click: Throw (if holding)");
         GUILayout.Label("Escape: Exit Game");
         
