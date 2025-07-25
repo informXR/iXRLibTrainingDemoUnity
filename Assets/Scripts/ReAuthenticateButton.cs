@@ -5,6 +5,6 @@ public class ReAuthenticateButton : XRBaseInteractable
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         base.OnSelectEntered(args);
-        Abxr.ReAuthenticate();
+        //Abxr.ReAuthenticate();
     }
 }
