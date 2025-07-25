@@ -272,26 +272,60 @@ public class DesktopInputController : MonoBehaviour
     
     private void TryGrabObject()
     {
-        Ray ray = xrCamera.ScreenPointToRay(mouse.position.ReadValue());
-        RaycastHit hit;
+        // Find all grabbable objects in the scene
+        XRGrabInteractable[] allInteractables = FindObjectsOfType<XRGrabInteractable>();
         
-        if (Physics.Raycast(ray, out hit, interactionDistance, interactableLayers))
+        XRGrabInteractable closestInteractable = null;
+        float closestDistance = float.MaxValue;
+        Vector3 closestHitPoint = Vector3.zero;
+        
+        // Find the closest grabbable object within interaction distance
+        foreach (var interactable in allInteractables)
         {
-            // Check for XRGrabInteractable first
-            XRGrabInteractable interactable = hit.collider.GetComponent<XRGrabInteractable>();
-            if (interactable != null)
+            // Calculate distance from camera to object
+            float distance = Vector3.Distance(xrCamera.transform.position, interactable.transform.position);
+            
+            if (distance <= interactionDistance && distance < closestDistance)
             {
-                GrabObject(interactable, hit.point);
-            }
-            else
-            {
-                // Check for XRSimpleInteractable (like the exit cube)
-                XRSimpleInteractable simpleInteractable = hit.collider.GetComponent<XRSimpleInteractable>();
-                if (simpleInteractable != null)
+                // Check if the object is in front of the camera (within a reasonable angle)
+                Vector3 directionToObject = (interactable.transform.position - xrCamera.transform.position).normalized;
+                float angle = Vector3.Angle(xrCamera.transform.forward, directionToObject);
+                
+                // Only consider objects within a 60-degree cone in front of the camera
+                if (angle <= 60f)
                 {
-                    ActivateSimpleInteractable(simpleInteractable);
+                    closestInteractable = interactable;
+                    closestDistance = distance;
+                    closestHitPoint = interactable.transform.position;
                 }
             }
+        }
+        
+        // Also check for simple interactables (like exit cube)
+        if (closestInteractable == null)
+        {
+            XRSimpleInteractable[] simpleInteractables = FindObjectsOfType<XRSimpleInteractable>();
+            foreach (var simpleInteractable in simpleInteractables)
+            {
+                float distance = Vector3.Distance(xrCamera.transform.position, simpleInteractable.transform.position);
+                if (distance <= interactionDistance && distance < closestDistance)
+                {
+                    Vector3 directionToObject = (simpleInteractable.transform.position - xrCamera.transform.position).normalized;
+                    float angle = Vector3.Angle(xrCamera.transform.forward, directionToObject);
+                    
+                    if (angle <= 60f)
+                    {
+                        ActivateSimpleInteractable(simpleInteractable);
+                        return;
+                    }
+                }
+            }
+        }
+        
+        // Act on the closest interactable found
+        if (closestInteractable != null)
+        {
+            GrabObject(closestInteractable, closestHitPoint);
         }
     }
     
@@ -490,4 +524,4 @@ public class DesktopInputController : MonoBehaviour
             turnProvider.enabled = true;
         }
     }
-} 
+}
