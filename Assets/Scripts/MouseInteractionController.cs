@@ -54,14 +54,9 @@ public class MouseInteractionController : MonoBehaviour
             //Debug.Log($"MouseInteractionController: ExitCube has ExitButton: {exitButton != null}");
             //Debug.Log($"MouseInteractionController: ExitCube position: {exitCube.transform.position}");
             
-            // Auto-fix: Add missing components if they don't exist
-            if (exitInteractable == null)
-            {
-                //Debug.Log("MouseInteractionController: Adding missing XRSimpleInteractable to ExitCube");
-                exitInteractable = exitCube.AddComponent<XRSimpleInteractable>();
-            }
-            
-            if (exitButton == null)
+            // Only add ExitButton if it doesn't exist and there's no XRSimpleInteractable
+            // This prevents the collider conflict issue
+            if (exitButton == null && exitInteractable == null)
             {
                 //Debug.Log("MouseInteractionController: Adding missing ExitButton to ExitCube");
                 exitButton = exitCube.AddComponent<ExitButton>();

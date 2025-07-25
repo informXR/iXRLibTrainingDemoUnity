@@ -16,13 +16,13 @@ public class Dropper : MonoBehaviour
     {
         queue = new List<GrabbableObjectManager.GrabbableObjectType>();
         TargetLocation[] targetLocations = GameObject.FindObjectsOfType<TargetLocation>();
-        Debug.Log(targetLocations.Length);
+        //Debug.Log(targetLocations.Length);
         //Abxr.EventLevelStart("1", new Dictionary<string, string> { ["scriptName"] = "Dropper" });
         //Abxr.LogInfo(targetLocations.Length.ToString());
         foreach (TargetLocation targetLocation in targetLocations)
         {
             queue.Add(targetLocation.targetType);
-            Debug.Log(targetLocation.targetType);
+            //Debug.Log(targetLocation.targetType);
         }
 
         SetDelay(2f);

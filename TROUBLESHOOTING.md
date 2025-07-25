@@ -10,17 +10,17 @@
 
 **Solutions**:
 
-1. **Use the Script Reference Fixer**:
-   - Go to `Tools > Fix Missing Script References` in the Unity menu
-   - This will identify all missing script references in the scene
+1. **Use the Missing Script Finder**:
+   - Go to `Tools > Find Missing Scripts` in the Unity menu
+   - This opens a window showing all objects with missing scripts
+   - Click on object names to select them in the hierarchy
+   - Use "Remove Missing" buttons to remove missing script components
+   - For prefabs, you may need to open them in Prefab Edit mode
 
-2. **Re-import All Scripts**:
-   - Go to `Tools > Re-import All Scripts` in the Unity menu
-   - This forces Unity to re-import all script files
-
-3. **Manual Fix**:
+2. **Manual Fix**:
+   - Select the object in the hierarchy
    - In the Inspector, look for components showing "Missing Script"
-   - Click the gear icon and select "Remove Component"
+   - Click the gear icon next to the missing script and select "Remove Component"
    - Re-add the component if needed
 
 ### 2. Collider Registration Conflicts
@@ -66,6 +66,7 @@
    - Add the `SceneValidator` component to a GameObject in your scene
    - Enable "Validate On Start" and "Auto Fix Issues"
    - This will automatically check for and fix common issues when the scene starts
+   - Right-click the component for additional validation options
 
 2. **Use the Fixed MouseInteractionController**:
    - The updated `MouseInteractionController` now properly checks for existing components before adding new ones
@@ -75,14 +76,19 @@
    - The updated `VariantManager` now has better error handling
    - It will log warnings instead of crashing when asset operations fail
 
+4. **Use the New Editor Tools**:
+   - New menu items under `Tools/` provide quick fixes for common issues
+   - `Tools > Find Missing Scripts` helps identify and remove missing script references
+   - `Tools > Validate Scene` checks for common setup issues
+
 ## Quick Fix Commands
 
 Run these in order if you encounter issues:
 
-1. `Tools > Fix Missing Script References`
-2. `Tools > Re-import All Scripts`
-3. `Tools > Clean Project Settings`
-4. `Assets > Refresh`
+1. `Tools > Find Missing Scripts` (recommended - helps identify and remove missing scripts)
+2. Or run these individually:
+   - `Tools > Validate Scene` (checks for common setup issues)
+   - `Assets > Refresh` (refreshes the asset database)
 
 ## Scene Setup Checklist
 

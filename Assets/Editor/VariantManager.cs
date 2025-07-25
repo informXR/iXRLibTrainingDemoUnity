@@ -126,28 +126,53 @@ public static class VariantManager
             Debug.Log($"Set project variant to: {variant}\n" +
                       $"Applied settings:\n{string.Join("\n", appliedSettings)}");
             
-            // Force Unity to reload the project settings
+            // Force Unity to reload the project settings with better error handling
             EditorApplication.delayCall += () => {
-                // Refresh the AssetDatabase again
-                AssetDatabase.Refresh();
-
-                // Close the Project Settings window if it's open
-                var projectSettingsWindow = EditorWindow.GetWindow(Type.GetType("UnityEditor.ProjectSettingsWindow,UnityEditor"));
-                if (projectSettingsWindow != null)
+                try
                 {
-                    projectSettingsWindow.Close();
+                    // Refresh the AssetDatabase again
+                    AssetDatabase.Refresh();
+
+                    // Close the Project Settings window if it's open
+                    try
+                    {
+                        var projectSettingsWindow = EditorWindow.GetWindow(System.Type.GetType("UnityEditor.ProjectSettingsWindow,UnityEditor"));
+                        if (projectSettingsWindow != null)
+                        {
+                            projectSettingsWindow.Close();
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogWarning($"Failed to close Project Settings window: {e.Message}");
+                    }
+
+                    // Save the project with error handling
+                    try
+                    {
+                        EditorApplication.ExecuteMenuItem("File/Save Project");
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.LogWarning($"Failed to save project: {e.Message}");
+                    }
+
+                    // Reopen the Project Settings window with error handling
+                    EditorApplication.delayCall += () => {
+                        try
+                        {
+                            EditorApplication.ExecuteMenuItem("Edit/Project Settings...");
+                        }
+                        catch (System.Exception e)
+                        {
+                            Debug.LogWarning($"Failed to reopen Project Settings window: {e.Message}");
+                        }
+                    };
                 }
-
-                // Reopen the Project Settings window
-                EditorApplication.ExecuteMenuItem("Edit/Project Settings...");
-
-                // Save the project
-                EditorApplication.ExecuteMenuItem("File/Save Project");
-
-                // Optionally, you can add a small delay before reopening the window
-                EditorApplication.delayCall += () => {
-                    EditorApplication.ExecuteMenuItem("Edit/Project Settings...");
-                };
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"Error during project settings reload: {e.Message}");
+                }
             };
         }
         else
@@ -216,5 +241,7 @@ public static class VariantManager
         AssetDatabase.Refresh();
         Debug.Log($"Current variant '{currentVariant}' settings have been backed up.");
     }
+
+
 }
 
