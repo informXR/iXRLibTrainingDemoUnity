@@ -28,7 +28,7 @@ public class OverrideSettings
 [System.Serializable]
 public class OverrideAddressables
 {
-    public string informXR;
+    public string ArborXR;
 }
 
 public static class VariantManager
@@ -99,8 +99,8 @@ public static class VariantManager
             }
 
             // Apply Addressables settings
-            string mainAddressablesFile = "Assets/Resources/informXR.asset";
-            string variantAddressablesFile = $"Assets/Resources/{settings.OverrideAddressables.informXR}";
+            string mainAddressablesFile = "Assets/Resources/ArborXR.asset";
+            string variantAddressablesFile = $"Assets/Resources/{settings.OverrideAddressables.ArborXR}";
             if (File.Exists(variantAddressablesFile))
             {
                 try
@@ -224,8 +224,8 @@ public static class VariantManager
         }
 
         // Backup Addressables settings
-        string mainAddressablesFile = "Assets/Resources/informXR.asset";
-        string variantAddressablesFile = $"Assets/Resources/{settings.OverrideAddressables.informXR}";
+        string mainAddressablesFile = "Assets/Resources/ArborXR.asset";
+        string variantAddressablesFile = $"Assets/Resources/{settings.OverrideAddressables.ArborXR}";
 
         try
         {

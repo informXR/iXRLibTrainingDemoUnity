@@ -91,8 +91,8 @@ crashlytics-build.properties
 /iXR Training_BurstDebugInformation_DoNotShip
 ProjectSettings/SelectedVariant.txt
 ProjectSettings/ProjectSettings.asset
-Assets/Resources/informXR.asset.meta
-Assets/Resources/informXR.asset
 /iXR Training Demo_BurstDebugInformation_DoNotShip
 /iXR Training Demo (Dev)_BurstDebugInformation_DoNotShip
 /iXR Training Demo (Local)_BurstDebugInformation_DoNotShip
+Assets/Resources/*.asset
+Assets/Resources/*.meta
