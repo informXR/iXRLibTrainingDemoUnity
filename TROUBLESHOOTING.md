@@ -6,11 +6,16 @@
 
 **Problem**: "The referenced script (Unknown) on this Behaviour is missing!"
 
-**Cause**: This typically occurs during variant switching when Unity's asset database gets corrupted or when scripts are moved/renamed.
+**Cause**: This typically occurs during variant switching when Unity's asset database gets corrupted, when scripts are moved/renamed, or after a fresh git checkout when Unity hasn't fully compiled all scripts yet.
 
 **Solutions**:
 
-1. **Use the Missing Script Finder**:
+1. **Automatic Fix (New!)**: 
+   - The `AutoSceneValidator` Editor script now automatically detects and fixes missing script references when Unity loads
+   - Check the Console for "AutoSceneValidator" messages
+   - If issues persist, use the manual methods below
+
+2. **Use the Missing Script Finder**:
    - Go to `Tools > Find Missing Scripts` in the Unity menu
    - This opens a window showing all objects with missing scripts
    - Click on object names to select them in the hierarchy
@@ -31,10 +36,9 @@
 
 **Solutions**:
 
-1. **Use Scene Validator**:
-   - Add the `SceneValidator` component to any GameObject in your scene
-   - Right-click the component and select "Validate Scene"
-   - Use "Fix ExitCube Issues" to resolve ExitCube-specific conflicts
+1. **Use Manual Tools**:
+   - Go to `Tools > Validate Current Scene (Auto)` in the Unity menu
+   - This will manually run the same validation that happens automatically
 
 2. **Manual Fix for ExitCube**:
    - Select the ExitCube GameObject
@@ -62,11 +66,10 @@
 
 ### 4. Preventative Measures
 
-1. **Add Scene Validator**:
-   - Add the `SceneValidator` component to a GameObject in your scene
-   - Enable "Validate On Start" and "Auto Fix Issues"
-   - This will automatically check for and fix common issues when the scene starts
-   - Right-click the component for additional validation options
+1. **Automatic Validation**:
+   - The `AutoSceneValidator` Editor script automatically runs when Unity loads
+   - It will automatically check for and fix common issues when scenes are opened
+   - Check the Console for "AutoSceneValidator" messages to see what was fixed
 
 2. **Use the Fixed MouseInteractionController**:
    - The updated `MouseInteractionController` now properly checks for existing components before adding new ones
