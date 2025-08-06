@@ -4,7 +4,6 @@
 /.cache
 .env
 .DS_Store
-.vscode/settings.json
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #

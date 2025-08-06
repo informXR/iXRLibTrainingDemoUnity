@@ -2,12 +2,6 @@
 
 ## Common Issues and Solutions
 
-### 1. Missing Script References
-
-**Problem**: "The referenced script (Unknown) on this Behaviour is missing!"
-
-**Cause**: This typically occurs during variant switching when Unity's asset database gets corrupted or when scripts are moved/renamed.
-
 **Solutions**:
 
 1. **Use the Missing Script Finder**:
@@ -41,10 +35,6 @@
    - Remove the `XRSimpleInteractable` component (keep the `ExitButton` component)
    - The `ExitButton` already inherits from `XRBaseInteractable`, so it doesn't need `XRSimpleInteractable`
 
-### 3. Variant Switching Issues
-
-**Problem**: Asset import errors during variant switching.
-
 **Solutions**:
 
 1. **Clean Project Settings**:
@@ -71,10 +61,6 @@
 2. **Use the Fixed MouseInteractionController**:
    - The updated `MouseInteractionController` now properly checks for existing components before adding new ones
    - This prevents collider conflicts with ExitCube
-
-3. **Improved Variant Manager**:
-   - The updated `VariantManager` now has better error handling
-   - It will log warnings instead of crashing when asset operations fail
 
 4. **Use the New Editor Tools**:
    - New menu items under `Tools/` provide quick fixes for common issues

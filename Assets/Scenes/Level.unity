@@ -719,7 +719,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 181380310}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e4bafcf961074509ad3cd1590dede98, type: 3}
+  m_Script: {fileID: 11500000, guid: 5053c66eb849f45ff9d36142afe7052f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enableDesktopControls: 1
@@ -6037,7 +6037,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1247676783}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f260ae121279b42868f088a5a8dfd906, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f6452a0002d442a78457f827ba5952a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
@@ -7886,7 +7886,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1579078794}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0a4cd5bd5f514050a35c7cdddae4ff2, type: 3}
+  m_Script: {fileID: 11500000, guid: 28f213b9dba364da0ad45f61d4db9321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
