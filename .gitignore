@@ -40,6 +40,9 @@
 # Visual Studio cache directory
 .vs/
 
+# IDE directories
+.idea/
+
 # Gradle cache directory
 .gradle/
 
@@ -86,13 +89,15 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# Package Manager
+/[Pp]ackages/packages-lock.json
+
+# Unity Package Settings (auto-generated, empty settings)
+/[Pp]rojectSettings/[Pp]ackages/com.unity.testtools.codecoverage/
+
 */xtempburstlibs/*/*.txt
-/TestApp_BackUpThisFolder_ButDontShipItWithYourGame
-/iXR Training_BurstDebugInformation_DoNotShip
-ProjectSettings/SelectedVariant.txt
+/*_ButDontShipItWithYourGame
+/*_DoNotShip
 ProjectSettings/ProjectSettings.asset
-Assets/Resources/informXR.asset.meta
-Assets/Resources/informXR.asset
-/iXR Training Demo_BurstDebugInformation_DoNotShip
-/iXR Training Demo (Dev)_BurstDebugInformation_DoNotShip
-/iXR Training Demo (Local)_BurstDebugInformation_DoNotShip
+Assets/Resources/*.asset
+Assets/Resources/*.meta
