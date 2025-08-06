@@ -107,35 +107,76 @@ public static class AutoSceneValidator
             Component[] components = obj.GetComponents<Component>();
             
             // Check for missing script components
+            bool hasMissingComponents = false;
             foreach (Component component in components)
             {
                 if (component == null)
                 {
-                    // Try to find and reconnect the script
-                    string missingScriptGuid = TryGetMissingScriptGuid(obj, 0);
-                    
-                    if (!string.IsNullOrEmpty(missingScriptGuid) && scriptLookup.ContainsKey(missingScriptGuid))
-                    {
-                        // Attempt to reconnect the script
-                        MonoScript foundScript = scriptLookup[missingScriptGuid];
-                        if (TryReconnectScript(obj, foundScript, missingScriptGuid))
-                        {
-                            Debug.Log($"AutoSceneValidator: Reconnected missing script '{foundScript.GetClass().Name}' on '{obj.name}'");
-                        }
-                        else
-                        {
-                            Debug.Log($"AutoSceneValidator: Script '{foundScript.GetClass().Name}' already exists on '{obj.name}'");
-                        }
-                    }
-                    
-                    // Mark that we found missing scripts
-                    foundIssues = true;
-                    break; // Exit the component loop since we found missing scripts on this object
+                    hasMissingComponents = true;
+                    break;
                 }
+            }
+            
+            if (hasMissingComponents)
+            {
+                // Try to reconnect all expected scripts for this object type
+                TryReconnectAllExpectedScripts(obj, scriptLookup);
+                foundIssues = true;
             }
         }
         
         return foundIssues;
+    }
+    
+    /// <summary>
+    /// Tries to reconnect all expected scripts for a given GameObject based on its name/type
+    /// </summary>
+    private static void TryReconnectAllExpectedScripts(GameObject obj, System.Collections.Generic.Dictionary<string, MonoScript> scriptLookup)
+    {
+        string objName = obj.name.ToLower();
+        System.Collections.Generic.List<System.Type> expectedScriptTypes = new System.Collections.Generic.List<System.Type>();
+        
+        // Determine what scripts this object should have based on its name
+        if (objName.Contains("exitcube") || objName.Contains("exit"))
+        {
+            expectedScriptTypes.Add(typeof(ExitButton));
+        }
+        else if (objName.Contains("resetcube") || objName.Contains("reset"))
+        {
+            expectedScriptTypes.Add(typeof(ResetButton));
+        }
+        else if (objName.Contains("reauthcube") || objName.Contains("reauth"))
+        {
+            expectedScriptTypes.Add(typeof(ReAuthenticateButton));
+        }
+        else if (objName.Contains("player") || objName.Contains("xr"))
+        {
+            // Player objects can have multiple scripts
+            expectedScriptTypes.Add(typeof(PlayerOrientationFix));
+            expectedScriptTypes.Add(typeof(DesktopInputController));
+        }
+        
+        // Try to reconnect each expected script type
+        foreach (System.Type scriptType in expectedScriptTypes)
+        {
+            // Only add if the component doesn't already exist
+            if (obj.GetComponent(scriptType) == null)
+            {
+                string scriptGuid = GetScriptGuidByType(scriptType);
+                if (!string.IsNullOrEmpty(scriptGuid) && scriptLookup.ContainsKey(scriptGuid))
+                {
+                    MonoScript foundScript = scriptLookup[scriptGuid];
+                    if (TryReconnectScript(obj, foundScript, scriptGuid))
+                    {
+                        Debug.Log($"AutoSceneValidator: Reconnected missing script '{scriptType.Name}' on '{obj.name}'");
+                    }
+                    else
+                    {
+                        Debug.Log($"AutoSceneValidator: Script '{scriptType.Name}' already exists on '{obj.name}'");
+                    }
+                }
+            }
+        }
     }
     
     private static void TryBuiltInCleanup()
@@ -194,32 +235,31 @@ public static class AutoSceneValidator
     {
         try
         {
-            // This is tricky - we need to read the raw serialized data to find the GUID
-            // Unity stores this in the scene file, but it's not easily accessible via API
-            
-            // For now, we'll try a different approach - look for common script patterns
+            // Dynamic approach - find GUIDs by script type names based on object patterns
             string objName = obj.name.ToLower();
             
-            // Map common object names to expected script GUIDs (from your project)
+            // Map common object names to expected script types
+            System.Type expectedScriptType = null;
+            
             if (objName.Contains("exitcube") || objName.Contains("exit"))
-                return "42723a225ff734044a8a6347d95587da"; // ExitButton.cs
+                expectedScriptType = typeof(ExitButton);
             else if (objName.Contains("resetcube") || objName.Contains("reset"))
-                return "699c84de7cce3466390bb7034346e5c1"; // ResetButton.cs
+                expectedScriptType = typeof(ResetButton);
             else if (objName.Contains("reauthcube") || objName.Contains("reauth"))
-                return "1ca6d1626b20642a69e1ba67a52e2141"; // ReAuthenticateButton.cs
+                expectedScriptType = typeof(ReAuthenticateButton);
             else if (objName.Contains("player") || objName.Contains("xr"))
             {
                 // Player can have multiple scripts - check which ones are missing
-                // Try PlayerOrientationFix first
                 if (obj.GetComponent<PlayerOrientationFix>() == null)
-                    return "26eb48bbc567e4af6bd41e66f9b7b69e"; // PlayerOrientationFix.cs
-                
-                // Try DesktopInputController if PlayerOrientationFix exists
-                if (obj.GetComponent<DesktopInputController>() == null)
-                    return "4450ca0bf4077466ebbed106da8a7205"; // DesktopInputController.cs
-                
-                // If both exist, this might be a duplicate reference - let removal handle it
-                return null;
+                    expectedScriptType = typeof(PlayerOrientationFix);
+                else if (obj.GetComponent<DesktopInputController>() == null)
+                    expectedScriptType = typeof(DesktopInputController);
+            }
+            
+            // If we found an expected script type, get its GUID dynamically
+            if (expectedScriptType != null)
+            {
+                return GetScriptGuidByType(expectedScriptType);
             }
                 
             return null;
@@ -228,6 +268,36 @@ public static class AutoSceneValidator
         {
             return null;
         }
+    }
+    
+    /// <summary>
+    /// Dynamically finds the GUID of a MonoScript by its Type
+    /// This works even if .meta files are regenerated
+    /// </summary>
+    private static string GetScriptGuidByType(System.Type scriptType)
+    {
+        try
+        {
+            // Search for the MonoScript asset by type name
+            string[] scriptGuids = AssetDatabase.FindAssets($"t:MonoScript {scriptType.Name}");
+            
+            foreach (string guid in scriptGuids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(assetPath);
+                
+                if (script != null && script.GetClass() == scriptType)
+                {
+                    return guid;
+                }
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"AutoSceneValidator: Could not find GUID for script type {scriptType?.Name}: {e.Message}");
+        }
+        
+        return null;
     }
     
     private static bool TryReconnectScript(GameObject obj, MonoScript script, string guid)
